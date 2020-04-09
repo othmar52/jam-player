@@ -14,6 +14,17 @@ export default new Vuex.Store({
       totalTracks: 0,
       totalDuration: 0,
       totalByteSize: 0
+    },
+    currentTrack: {
+      sessionIndex: '',
+      trackIndex: ''
+    },
+    permaPlayer: {
+      track: {},
+      positionPercent: 0,
+      positionSecond: 0,
+      playing: false,
+      stemStates: {}
     }
   },
   mutations: {
@@ -49,10 +60,61 @@ export default new Vuex.Store({
     setTracklistData: function (context, tracklistData) {
       this.state.treeStructure = tracklistData
       // console.log('setTracklistData ', tracklistData)
+    },
+    loadPlayerTrack: function (context, trackData) {
+      Vue.set(context.state, 'currentTrack', trackData)
+      const newPermaPlayer = {
+        track: this.state.stemSessions[trackData.sessionIndex].tracks[trackData.trackIndex],
+        positionPercent: 0,
+        positionSecond: 0,
+        playing: false,
+        stemStates: {}
+      }
+      newPermaPlayer.track.stems.forEach(function (stem, index) {
+        // console.log(stem.title, index)
+        newPermaPlayer.stemStates[`s${index}`] = {
+          isMuted: false,
+          isSoloed: false,
+          isIsolated: false,
+          volLevel: stem.volume
+        }
+      })
+      Vue.set(context.state, 'permaPlayer', newPermaPlayer)
+
+      /*
+      this.state.currentTrack = trackData
+      this.state.permaPlayer = {
+        track: this.state.stemSessions[trackData.sessionIndex].tracks[trackData.trackIndex],
+        positionPercent: 0,
+        positionSecond: 0,
+        playing: false,
+        stemStates: {}
+      }
+      this.dispatch('setInitialStemStates')
+      */
+    },
+    setInitialStemStates: function (context) {
+      console.log('setInitialStemStates')
+      context.state.permaPlayer.track.stems.forEach(function (stem, index) {
+        // console.log(stem.title, index)
+        context.state.permaPlayer.stemStates[`s${index}`] = {
+          isMuted: false,
+          isSoloed: false,
+          isIsolated: false,
+          volLevel: stem.volume
+        }
+      })
+    },
+    togglePermaPlayingState: function (context) {
+      context.state.permaPlayer.playing = !context.state.permaPlayer.playing
     }
   },
   getters: {
-    getStats: state => state.stats
+    getStats: state => state.stats,
+    getAllSessions: state => state.stemSessions,
+    getSessionByIndex: (state) => (sessionIndex) => { return state.stemSessions[sessionIndex] },
+    getCurrentTrack: state => state.permaPlayer,
+    getTrackByIndex: (state) => (sessionIndex, trackIndex) => { return state.stemSessions[sessionIndex].tracks[trackIndex] }
   },
   modules: {
   }
