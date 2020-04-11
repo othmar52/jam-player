@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     loadTrack (trackIndex) {
-      console.log('loadTrack', trackIndex)
+      // console.log('loadTrack', trackIndex)
       this.$store.dispatch(
         'loadPlayerTrack',
         {
@@ -83,7 +83,7 @@ export default {
       return false
     },
     forwardToTrack (trackIndex) {
-      console.log('forwardToTrack', trackIndex)
+      // console.log('forwardToTrack', trackIndex)
       this.$router.push(
         {
           name: 'TrackShow',
