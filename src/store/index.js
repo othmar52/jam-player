@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import DataLoader from '../assets/js/DataLoader'
 import PathPrefixer from '../assets/js/PathPrefixer'
+import StemStates from '../assets/js/StemStates'
 
 Vue.use(Vuex)
 
@@ -27,18 +28,28 @@ export default new Vuex.Store({
       playing: false,
       requestSeek: false,
       stemStates: {}
+    },
+    settings: {
+      soloMode: 'single' // use 'multi' for having multiple stems soloed simultaneously
     }
   },
   mutations: {
-    retrieveTracklist: function () {
-      // @see src/assets/js/DataLoader.js
-    },
-    retrieveSessionProperties (state, payload) {
-      // @see src/assets/js/PathPrefixer.js
-    },
-    retrieveTrackproperties (state, payload) {
-      // @see src/assets/js/PathPrefixer.js
-    },
+    // @see src/assets/js/DataLoader.js
+    retrieveTracklist: function () { },
+
+    // @see src/assets/js/PathPrefixer.js
+    retrieveSessionProperties (state, payload) { },
+    retrieveTrackproperties (state, payload) { },
+
+    // @see src/assets/js/StemStates.js
+    requestVolumeChange (state, payload) { },
+    requestToggleMute (state, payload) { },
+    requestToggleSolo (state, payload) { },
+    requestBoostStart (state, payload) { },
+    requestBoostEnd (state) { },
+    requestUnmuteAll (state) { },
+    requestUnsoloAll (state) { },
+
     addSession (state, payload) {
       if (typeof state.stemSessions[payload.index] !== 'undefined') {
         // already added
@@ -77,7 +88,8 @@ export default new Vuex.Store({
   },
   plugins: [
     DataLoader,
-    PathPrefixer
+    PathPrefixer,
+    StemStates
   ],
   actions: {
     setTracklistData: function (context, tracklistData) {
@@ -98,15 +110,30 @@ export default new Vuex.Store({
       this.dispatch('forcePermaPlay')
     },
     setInitialStemStates: function (context) {
+      const newStemStates = {}
       context.state.permaPlayer.track.stems.forEach(function (stem, index) {
-        context.state.permaPlayer.stemStates[`s${index}`] = {
-          isMuted: false,
-          isSoloed: false,
-          isIsolated: false,
+        newStemStates[`s${index}`] = {
+          // internal states defined by the user within the gui
+          isMutedInternal: false,
+          isSoloedInternal: false,
+          isBoostedInternal: false,
+          volLevelInternal: stem.volume,
+
+          // thoses reflect the visual button states (probably different than internal states) and stem track state
+          isMutedGui: false,
+          isSoloedGui: false,
+          isInactiveTrackGui: false,
+
+          // those are the real values which gets applied in the audio player
+          isMutedAudio: false,
           volLevel: stem.volume
         }
       })
+      Vue.set(context.state.permaPlayer, 'stemStates', newStemStates)
     },
+    // setUpdatedStemStates: function (context, payload) {
+    //   Vue.set(context.state.permaPlayer, 'stemStates', payload)
+    // },
     togglePermaPlayingState: function (context) {
       context.state.permaPlayer.playing = !context.state.permaPlayer.playing
     },
@@ -118,6 +145,7 @@ export default new Vuex.Store({
     getStats: state => state.stats,
     getAllSessions: state => state.stemSessions,
     getSessionByIndex: (state) => (sessionIndex) => { return state.stemSessions[sessionIndex] },
+    getStemStateByIndex: (state) => (stemIndex) => { return state.permaPlayer.stemStates[`s${stemIndex}`] },
     getCurrentTrack: state => state.permaPlayer,
     getLoadedTrackInfo: state => state.currentTrack,
     getCurrentProgressPercent: state => state.permaPlayer.positionPercent,

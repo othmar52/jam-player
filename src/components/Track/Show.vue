@@ -68,14 +68,14 @@
       </header>
       <ul class="track__tools tool tool--all">
         <li class="tool__item">
-          <button class="tool__action tool__action--solo button">Unsolo All</button>
+          <button class="tool__action tool__action--solo button" @click="unsoloAll">Unsolo All</button>
         </li>
         <li class="tool__item">
-          <button class="tool__action tool__action--mute button">Unmute All</button>
+          <button class="tool__action tool__action--mute button" @click="unmuteAll">Unmute All</button>
         </li>
-        <li class="tool__item">
+        <!--li class="tool__item">
           <button class="tool__action tool__action--save button">Save Settings</button>
-        </li>
+        </li-->
       </ul>
       <ul class="track__lines">
         <li v-if="!isNowPlaying" class="overlayPlay" @click="loadTrack(trackIndex)">PLAY</li>
@@ -167,6 +167,18 @@ export default {
         }
       )
       this.$store.dispatch('forcePermaPlay')
+    },
+    unsoloAll () {
+      if (this.isNowPlaying === false) {
+        return
+      }
+      this.$store.commit('requestUnsoloAll')
+    },
+    unmuteAll () {
+      if (this.isNowPlaying === false) {
+        return
+      }
+      this.$store.commit('requestUnmuteAll')
     }
   },
   watch: {

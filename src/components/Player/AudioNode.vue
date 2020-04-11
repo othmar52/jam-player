@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 export default {
   name: 'AudioNode',
   data () {
@@ -30,6 +31,17 @@ export default {
     source: String,
     stemIndex: Number,
     playOrPause: String
+  },
+  computed: {
+    ...mapGetters([
+      'getStemStateByIndex'
+    ]),
+    volValue () {
+      return this.getStemStateByIndex(this.stemIndex).volLevel
+    },
+    mutedAudio () {
+      return this.getStemStateByIndex(this.stemIndex).isMutedAudio
+    }
   },
   methods: {
     play () {
@@ -56,6 +68,14 @@ export default {
   watch: {
     playOrPause (newValue) {
       this[newValue]()
+    },
+    volValue (newValue) {
+      // console.log('AudioNode watcher volValue: ', newValue)
+      this.$refs.audio.volume = newValue
+    },
+    mutedAudio (newValue) {
+      // console.log('AudioNode watcher mutedAudio: ', newValue)
+      this.$refs.audio.muted = newValue
     }
   },
   mounted () {
