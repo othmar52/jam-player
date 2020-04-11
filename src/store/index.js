@@ -76,6 +76,9 @@ export default new Vuex.Store({
     playerDurationUpdate (state, second) {
       state.permaPlayer.duration = second
     },
+    playerTrackEnded (state) {
+      // TODO: handle playerTrackEnded event
+    },
     requestSeek (state, percent) {
       Vue.set(state.permaPlayer, 'requestSeek', percent * (state.permaPlayer.duration / 100))
     },
