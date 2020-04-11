@@ -1,19 +1,41 @@
 <template>
   <div id="permaplayer">
     <div v-if="currentTrack">
-      <strong>permaplayer {{ currentTrack.track.title }} BBB</strong>
-      <button class="track__play play" @click="togglePlayPause">
-        <SvgPlayPause />
-      </button>
-      <AudioNode
-        v-for="(stem, idx) in stems"
-        v-bind:key="`${currentTrack.track.session}${currentTrack.track.trackLetter}${idx}`"
-        v-bind:source="stem.filePath"
-        :ref="`s${idx}`"
-      />
+      <div class="permaplayer__section-play">
+        <button class="track__play play" @click="togglePlayPause">
+          <SvgPlayPause v-bind:usePath="playOrPauseInverted" />
+        </button>
+      </div>
+      <div class="permaplayer__section-main">
+        {{ currentTrack.track.trackLetter }} {{ currentTrack.track.title }} -
+        <router-link :to="{
+          name: 'SessionShow',
+          params: {
+            sessionIndex: currentTrack.track.session
+          }
+        }">Session #{{ formatSessionNumber(currentTrack.track.session) }}</router-link>
+        <MusiciansBadges :track="currentTrack.track" />
+        <span>{{currentTrack.track.bpm}} BPM</span>
+        <div class="player__control-seek">
+          <div class="seek__progress" ref="progress" :style="currentProgressPercent"></div>
+          <div class="seek__clickarea" @click="triggerSeekRequest" ref="seek"></div>
+        </div>
+        <AudioNode
+          v-for="(stem, idx) in stems"
+          v-bind:key="`${currentTrack.track.session}${currentTrack.track.trackLetter}${idx}`"
+          v-bind:source="stem.filePath"
+          v-bind:stemIndex="idx"
+          v-bind:playOrPause="playOrPause"
+          :ref="`s${idx}`"
+        />
+      </div>
+      <div class="permaplayer__section-right">
+          {{ currentProgressSecond }} / {{ durationSecond }}
+          <!-- <span title="TODO: fullscreen toggle">[X]</span> -->
+      </div>
     </div>
     <div v-else>
-      no track in permaplayer
+      no track in permaplayer. TODO: random button
     </div>
   </div>
 </template>
@@ -23,69 +45,110 @@
 import { mapGetters } from 'vuex'
 import SvgPlayPause from '@/components/Svg/PlayPause.vue'
 import AudioNode from '@/components/Player/AudioNode.vue'
+import MusiciansBadges from '@/components/MusiciansBadges.vue'
+import { helpersMixin } from '@/assets/js/helpersMixin.js'
 
 export default {
   name: 'PermaPlayer',
   components: {
     SvgPlayPause,
-    AudioNode
+    AudioNode,
+    MusiciansBadges
   },
+  mixins: [
+    helpersMixin
+  ],
   data () {
     return {
-      componentKey: 0
+      playOrPause: 'pause'
     }
   },
   computed: {
     ...mapGetters([
-      'getCurrentTrack'
+      'getCurrentTrack',
+      'getCurrentProgressPercent',
+      'getCurrentProgressSecond',
+      'getDurationSecond',
+      'getRequestSeek',
+      'getIsPlaying'
     ]),
     currentTrack () {
       return this.getCurrentTrack
     },
     stems () {
       return this.getCurrentTrack.track.stems
+    },
+    currentProgressPercent () {
+      return `width: ${this.getCurrentProgressPercent}%`
+    },
+    currentProgressSecond () {
+      return this.formatTime(this.getCurrentProgressSecond)
+    },
+    durationSecond () {
+      return this.formatTime(this.getDurationSecond)
+    },
+    requestSeek () {
+      return this.$store.getters.getRequestSeek
+    },
+    isPlaying () {
+      return this.$store.getters.getIsPlaying
+    },
+    playOrPauseInverted () {
+      return (this.playOrPause === 'play') ? 'pause' : 'play'
     }
   },
   watch: {
-    currentTrack () {
+    currentTrack () { },
+    stems () { },
+    currentProgressPercent () { },
+    currentProgressSecond () { },
+    durationSecond () { },
+    playOrPause () { },
+    playOrPauseInverted () { },
+    isPlaying (newVal) {
+      this.playOrPause = (newVal) ? 'play' : 'pause'
+      if (newVal === true) {
+        this.forcePlay()
+      }
     },
-    stems () {
-      // this.currentTrack = data
+    requestSeek (val) {
+      if (val > 0) {
+        for (const playerId in this.currentTrack.stemStates) {
+          this.$refs[playerId][0].seekTo(val)
+        }
+        this.$store.commit('requestSeekFinished')
+      }
     }
   },
   methods: {
-    forceRerender () {
-      this.componentKey += 1
-    },
     togglePlayPause () {
       if (window.audioCtx) {
         window.audioCtx.resume()
       }
 
       let playerCmd = 'pause'
-      // let iconPathId = '#play-icon'
       if (this.currentTrack.playing === false) {
         playerCmd = 'play'
-        // iconPathId = '#pause-icon'
       }
-      for (const playerId in this.currentTrack.stemStates) {
-        this.$refs[playerId][0][playerCmd]()
-        /*
-          let player = $('#' + playerId);
-          if(playerCmd === null) {
-              playerCmd = 'pause';
-              iconPathId = '#play-icon';
-              if(player.paused) {
-                  playerCmd = 'play';
-                  iconPathId = '#pause-icon';
-              }
-          }
-          $('.track__play use').setAttribute( 'xlink:href', iconPathId);
-          player[playerCmd]();
-          player.volume = window.stemState[playerId].volLevel;
-        */
-      }
+      this.playOrPause = playerCmd
       this.$store.dispatch('togglePermaPlayingState')
+    },
+    forcePlay () {
+      if (window.audioCtx) {
+        window.audioCtx.resume()
+      }
+      this.playOrPause = 'play'
+    },
+    triggerSeekRequest (e) {
+      // console.log('seek')
+      const rect = this.$refs.seek.getBoundingClientRect()
+      const x = e.clientX - rect.left // x position within the element.
+      const w = e.target.offsetWidth
+      const percent = x / (w / 100)
+      this.$store.commit('requestSeek', percent)
+    },
+    invertPlayPause (inputString) {
+      return (inputString === 'play') ? 'pause' : 'play'
     }
   }
 }
@@ -97,8 +160,80 @@ export default {
   bottom: 0;
   left: 0;
   height: 100px;
-  border: 2px solid tomato;
   width: 100%;
   z-index: 200;
+  background: linear-gradient(to bottom, #f1f1f1, #f1f1f1, #dfe0e5, #cecfd9, #b9bccb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $darkblue;
+  &>* {
+    display: contents;
+  }
+  .permaplayer__section-play {
+    min-width: 150px;
+    max-width: 150px;
+    text-align: center;
+    height: 100%;
+    padding-top: 17px;
+    border-right: 1px solid #caccd6;
+  }
+  .permaplayer__section-main {
+    flex-grow: 1;
+    flex-shrink: 1;
+    padding-left: 3em;
+
+    a {
+      text-decoration: underline;
+    }
+
+    .player__control-seek {
+      width: 100%;
+      height: 10px;
+      border-radius: 5px;
+      background-color: $darkblue;
+      margin: 10px 0;
+      position: relative;
+
+      .seek__progress {
+        width: 100%;
+        height: 100%;
+        background: $lightblue;
+        border-radius: 5px;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+
+      .seek__clickarea {
+        width: 100%;
+        height: 30px;
+        position: absolute;
+        top: -7px;
+      }
+
+      .seek__clickarea:hover {
+        cursor: pointer;
+      }
+    }
+  }
+  .permaplayer__section-right {
+    min-width: 220px;
+    max-width: 220px;
+    text-align: center;
+  }
+
+  .musician__badges {
+    display: inline-block;
+    .stem__title {
+      background: none;
+    }
+    .stem__title:after {
+      content: ', ';
+    }
+    .stem__title:last-child:after {
+      content: '';
+    }
+  }
+
 }
 </style>

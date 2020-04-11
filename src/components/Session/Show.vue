@@ -26,7 +26,7 @@
               <span class="bright">{{ track.duration }}</span>
             </td>
             <td>
-              <MusiciansBadges />
+              <MusiciansBadges :track="track" />
             </td>
             <td>
               <RatingStars />

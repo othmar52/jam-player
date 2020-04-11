@@ -13,7 +13,10 @@
             <th class="heading__rating">Avarage Rating</th>
           </tr>
 
-          <tr v-for="(session, idx) in getAllSessions" v-bind:key="idx" @click="forwardToSession(idx)">
+          <tr
+            v-for="(session, idx) in getAllSessions"
+            v-bind:key="idx"
+            @click="forwardToSession(idx)">
             <td class="session__date">
               <time class="session__date date">
                 <span class="date__year">{{ session.year }}</span>
@@ -29,10 +32,10 @@
               </h3>
             </td>
             <td class="text--centered">
-              <span class="darker__text">{{ session.tracks.size }}x</span>
+              <span class="darker__text">{{ session.trackCount }}</span>
             </td>
             <td class="text--centered">
-              <span class="darker__text">{{ session.duration }} min</span>
+              <span class="darker__text">{{ toMinutes(session.duration) }} min</span>
             </td>
             <td>
               <MusiciansBadges />
@@ -68,6 +71,7 @@
 import { mapGetters } from 'vuex'
 import MusiciansBadges from '@/components/MusiciansBadges.vue'
 import RatingStars from '@/components/RatingStars.vue'
+import { helpersMixin } from '@/assets/js/helpersMixin.js'
 
 export default {
   name: 'SessionList',
@@ -75,6 +79,9 @@ export default {
     MusiciansBadges,
     RatingStars
   },
+  mixins: [
+    helpersMixin
+  ],
   computed: {
     ...mapGetters([
       'getAllSessions'

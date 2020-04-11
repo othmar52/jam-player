@@ -494,11 +494,12 @@ input[type="range"]::-ms-fill-upper {
     background: #435b85;
     color: white;
   }
-  .tracklist__item--active .track_letter {
+  .router-link-exact-active .track_letter {
     background-color: $lightblue;
     color: #435b85;
     border-color: #50b0d9;
   }
+  // TODO: to get this working we need the active class on the parent li instead of a
   .tracklist__item--active ~ li .track_letter {
     background: #0d1332;
     color: $lightblue;

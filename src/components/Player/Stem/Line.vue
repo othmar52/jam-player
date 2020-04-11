@@ -4,11 +4,10 @@
         #{{ stemIndex+1 }}
     </div>
     <div class="line__wave" :id="`line__wave${stemIndex}`">
-        <div :id="`waveform__wrapper${stemIndex}`" class="waveform__wrapper">
-           <canvas width="852" height="42"></canvas>
+        <div class="waveform__wrapper" ref="waveform">
         </div>
-        <div class="seek__progress" style="width: 0"></div>
-        <div class="seek__clickarea"></div>
+        <div class="seek__progress" :style="progressPercent"></div>
+        <div class="seek__clickarea" @click="seek" ref="seek"></div>
     </div>
     <div class="line__audio line__audio--left"></div>
     <div class="line__audio line__audio--right"></div>
@@ -36,7 +35,7 @@
             </button>
         </span>
         <div class="line__artist artist">
-          jammer
+          jammer {{ isNowPlaying }}
           <span class="artist__name">{{ stem.title }}</span>
         </div>
         <div class="tool__item tool__item--volume">
@@ -48,11 +47,36 @@
 </template>
 
 <script>
+import { waveFormMixin } from '@/assets/js/waveFormMixin.js'
 export default {
   name: 'PlayerStemLine',
+  mixins: [
+    waveFormMixin
+  ],
   props: {
     stemIndex: Number,
-    stem: Object
+    stem: Object,
+    isNowPlaying: Boolean
+  },
+  computed: {
+    progressPercent () {
+      if (this.isNowPlaying === false) {
+        return 'width: 0'
+      }
+      return `width: ${this.$store.getters.getCurrentProgressPercent}%`
+    }
+  },
+  methods: {
+    seek (e) {
+      if (this.isNowPlaying === false) {
+        return
+      }
+      const rect = this.$refs.seek.getBoundingClientRect()
+      const x = e.clientX - rect.left // x position within the element.
+      const w = e.target.offsetWidth
+      const percent = x / (w / 100)
+      this.$store.commit('requestSeek', percent)
+    }
   }
 }
 </script>
