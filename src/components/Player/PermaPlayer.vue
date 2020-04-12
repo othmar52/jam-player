@@ -1,5 +1,5 @@
 <template>
-  <div id="permaplayer">
+  <div id="permaplayer" :class="hiddenClass">
     <div v-if="currentTrack">
       <div class="permaplayer__section-play">
         <button class="track__play play" @click="togglePlayPause">
@@ -95,6 +95,9 @@ export default {
     },
     playOrPauseInverted () {
       return (this.playOrPause === 'play') ? 'pause' : 'play'
+    },
+    hiddenClass () {
+      return (this.currentRouteIsPermaPlayersAudio() === true) ? 'hidden' : ''
     }
   },
   watch: {
@@ -149,6 +152,18 @@ export default {
     },
     invertPlayPause (inputString) {
       return (inputString === 'play') ? 'pause' : 'play'
+    },
+    currentRouteIsPermaPlayersAudio () {
+      if (this.$route.name !== 'TrackShow') {
+        return false
+      }
+      if (this.$route.params.sessionIndex !== this.currentTrack.track.session) {
+        return false
+      }
+      if (this.$route.params.trackIndex !== this.currentTrack.track.trackLetter) {
+        return false
+      }
+      return true
     }
   }
 }
@@ -158,6 +173,7 @@ export default {
 #permaplayer {
   position: absolute;
   bottom: 0;
+  transition: bottom 0.5s ease 0s;
   left: 0;
   height: 100px;
   width: 100%;
@@ -235,5 +251,8 @@ export default {
     }
   }
 
+}
+#permaplayer.hidden {
+  bottom: -110px;
 }
 </style>
