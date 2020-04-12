@@ -1,3 +1,7 @@
+
+public/data
+public/tracklist.js
+
 .DS_Store
 node_modules
 /dist
