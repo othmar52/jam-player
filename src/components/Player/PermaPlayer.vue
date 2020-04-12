@@ -97,7 +97,11 @@ export default {
       return (this.playOrPause === 'play') ? 'pause' : 'play'
     },
     hiddenClass () {
-      return (this.currentRouteIsPermaPlayersAudio() === true) ? 'hidden' : ''
+      return (this.currentRouteIsPermaPlayersAudio() === true)
+        ? 'hidden'
+        : (this.currentTrack.track.stems)
+          ? ''
+          : 'hidden'
     }
   },
   watch: {
