@@ -18,8 +18,12 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { dbMeterSourceMixin } from '@/assets/js/dbMeterSourceMixin.js'
 export default {
   name: 'AudioNode',
+  mixins: [
+    dbMeterSourceMixin
+  ],
   props: {
     source: String,
     stemIndex: Number,
@@ -71,6 +75,7 @@ export default {
     this[this.playOrPause]()
     // TODO: check mixup with http & file protocol...
     // this.$refs.audio.setAttribute('crossorigin', 'anonymous');
+    this.initMeter(this.$refs.audio)
   }
 }
 </script>

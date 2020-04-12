@@ -27,7 +27,8 @@ export default new Vuex.Store({
       positionSecond: 0,
       playing: false,
       requestSeek: false,
-      stemStates: {}
+      stemStates: {},
+      dbMeters: {}
     },
     settings: {
       soloMode: 'single' // use 'multi' for having multiple stems soloed simultaneously
@@ -87,6 +88,13 @@ export default new Vuex.Store({
     },
     togglePermaPlayingStateMut: function (state) {
       state.permaPlayer.playing = !state.permaPlayer.playing
+    },
+    retrieveDbMeterValues (state, payload) {
+      if (typeof state.permaPlayer.dbMeters[`s${payload.stemIndex}`] === 'undefined') {
+        return
+      }
+      Vue.set(state.permaPlayer.dbMeters[`s${payload.stemIndex}`], 'left', payload.maskSizes[0])
+      Vue.set(state.permaPlayer.dbMeters[`s${payload.stemIndex}`], 'right', payload.maskSizes[1])
     }
   },
   plugins: [
@@ -110,6 +118,7 @@ export default new Vuex.Store({
         stemStates: {}
       }
       this.dispatch('setInitialStemStates')
+      this.dispatch('setInitialDbMeterValues')
       this.dispatch('forcePermaPlay')
     },
     setInitialStemStates: function (context) {
@@ -134,6 +143,13 @@ export default new Vuex.Store({
       })
       Vue.set(context.state.permaPlayer, 'stemStates', newStemStates)
     },
+    setInitialDbMeterValues: function (context) {
+      const newDbValues = {}
+      context.state.permaPlayer.track.stems.forEach(function (stem, index) {
+        newDbValues[`s${index}`] = { left: 100, right: 100 }
+      })
+      Vue.set(context.state.permaPlayer, 'dbMeters', newDbValues)
+    },
     // setUpdatedStemStates: function (context, payload) {
     //   Vue.set(context.state.permaPlayer, 'stemStates', payload)
     // },
@@ -149,6 +165,7 @@ export default new Vuex.Store({
     getAllSessions: state => state.stemSessions,
     getSessionByIndex: (state) => (sessionIndex) => { return state.stemSessions[sessionIndex] },
     getStemStateByIndex: (state) => (stemIndex) => { return state.permaPlayer.stemStates[`s${stemIndex}`] },
+    getDbMeterValuesByIndex: (state) => (stemIndex) => { return state.permaPlayer.dbMeters[`s${stemIndex}`] },
     getCurrentTrack: state => state.permaPlayer,
     getLoadedTrackInfo: state => state.currentTrack,
     getCurrentProgressPercent: state => state.permaPlayer.positionPercent,

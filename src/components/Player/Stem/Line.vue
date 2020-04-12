@@ -16,8 +16,7 @@
     <div class="line__audio line__audio--left"></div>
     <div class="line__audio line__audio--right"></div>
     <div class="line__meta" id="line_meta0">
-      <div :id="`dbmeter${stemIndex}`" class="dbmeter">
-      </div>
+      <DbMeter :stemIndex="stemIndex" :isNowPlaying="isNowPlaying" />
       <ul class="line__tools tool tool--line">
         <li class="tool__item">
           <button
@@ -71,11 +70,20 @@
 <script>
 import { mapGetters } from 'vuex'
 import { waveFormMixin } from '@/assets/js/waveFormMixin.js'
+import DbMeter from '@/components/DbMeter.vue'
 export default {
   name: 'PlayerStemLine',
   mixins: [
     waveFormMixin
   ],
+  components: {
+    DbMeter
+  },
+  data () {
+    return {
+      meterCreated: false
+    }
+  },
   props: {
     stemIndex: Number,
     stem: Object,
