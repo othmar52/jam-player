@@ -22,6 +22,7 @@ Object.size = function (obj) {
 // perform an ajax call. but we can load a script during runtime by creating a DOM node...
 const jsNode = document.createElement('script')
 jsNode.setAttribute('src', './tracklist.js')
+jsNode.setAttribute('src', './tracklist-full.js')
 document.head.appendChild(jsNode)
 
 // helper vars

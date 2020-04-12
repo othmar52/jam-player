@@ -14,7 +14,18 @@ const DataLoader = store => {
     }
   }
 
+  function countTracks (treeStructure) {
+    let count = 0
+    for (let i = 0; i < treeStructure.length; i++) {
+      for (let ii = 0; ii < treeStructure[i].tracks.length; ii++) {
+        count++
+      }
+    }
+    store.commit('retrieveTrackCount', count)
+  }
+
   async function checkConfig (treeStructure) {
+    countTracks(treeStructure)
     await loadConfigFilesForTreeLeafs(treeStructure)
 
     // console.log('no more tries to load script...');
@@ -75,6 +86,7 @@ const DataLoader = store => {
           type: 'text/javascript',
           src: trackDataPath + 'config.js'
         }
+        store.commit('retrieveLoadAttempt')
         await Promise.all([loadScript(trackDataPath, attributes)])
           .then(function () {
             store.commit('retrieveSessionProperties', {
@@ -87,6 +99,7 @@ const DataLoader = store => {
               trackDataPath: trackDataPath
             })
             // console.log('SUCCESS in Promise checkConfigPaths()', sessIdx, trackIdx)
+            // remove script container
             removeDomNode('#' + scriptId)
           })
           .catch(function () {

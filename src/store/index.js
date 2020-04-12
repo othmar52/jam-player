@@ -11,10 +11,13 @@ export default new Vuex.Store({
     treeStructure: [],
     stemSessions: {},
     stats: {
+      totalTrackConfigs: 0,
+      trackLoadAttempts: 0,
       totalSessions: 0,
       totalTracks: 0,
       totalDuration: 0,
-      totalByteSize: 0
+      totalByteSize: 0,
+      loadedPercent: 0
     },
     currentTrack: {
       sessionIndex: '',
@@ -37,6 +40,13 @@ export default new Vuex.Store({
   mutations: {
     // @see src/assets/js/DataLoader.js
     retrieveTracklist: function () { },
+    retrieveTrackCount: function (state, payload) {
+      state.stats.totalTrackConfigs = payload
+    },
+    retrieveLoadAttempt: function (state) {
+      state.stats.trackLoadAttempts++
+      state.stats.loadedPercent = state.stats.trackLoadAttempts / (state.stats.totalTrackConfigs / 100)
+    },
 
     // @see src/assets/js/PathPrefixer.js
     retrieveSessionProperties (state, payload) { },
@@ -173,7 +183,12 @@ export default new Vuex.Store({
     getDurationSecond: state => state.permaPlayer.duration,
     getRequestSeek: state => state.permaPlayer.requestSeek,
     getIsPlaying: state => state.permaPlayer.playing,
-    getTrackByIndex: (state) => (sessionIndex, trackIndex) => { return state.stemSessions[sessionIndex].tracks[trackIndex] }
+    getTrackByIndex: (state) => (sessionIndex, trackIndex) => {
+      if (typeof state.stemSessions[sessionIndex] === 'undefined') {
+        return undefined
+      }
+      return state.stemSessions[sessionIndex].tracks[trackIndex]
+    }
   },
   modules: {
   }

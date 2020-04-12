@@ -146,7 +146,9 @@ input[type="range"]::-ms-fill-upper {
     stroke-width: 5px;
     stroke-linecap: round;
     opacity: 1;
-    transition: opacity 0.5s ease-out, stroke-dashoffset 0.4s ease;
+    // todo: why douse dashoffset transition freeze until end?
+    // transition: opacity 0.5s ease-out, stroke-dashoffset 0.1s ease;
+    transition: opacity 0.5s ease-out;
     
   }
   

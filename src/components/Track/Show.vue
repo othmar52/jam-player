@@ -1,5 +1,5 @@
 <template>
-  <div class="dont__flex">
+  <div class="dont__flex" v-if="track">
     <aside class="page__sidebar tracklist">
       <h3 class="tracklist__title">Tracklist Session <span class="session__symbol">#</span><span class="session__nr">{{ formatSessionNumber(sessionIndex) }}</span></h3>
       <ul class="tracklist__list">
@@ -107,7 +107,9 @@ export default {
   ],
   data () {
     return {
-      session: ''
+      session: '',
+      trackIndex: '',
+      sessionIndex: ''
     }
   },
   computed: {
@@ -117,14 +119,8 @@ export default {
       'getLoadedTrackInfo',
       'getIsPlaying'
     ]),
-    sessionIndex () {
-      return this.$route.params.sessionIndex
-    },
-    trackIndex () {
-      return this.$route.params.trackIndex
-    },
     sessionTracks () {
-      if (typeof this.session === 'undefined') {
+      if (typeof this.session.tracks === 'undefined') {
         return []
       }
       return this.session.tracks
@@ -148,7 +144,9 @@ export default {
       return 'play'
     }
   },
-  mounted () {
+  created () {
+    this.sessionIndex = this.$route.params.sessionIndex
+    this.trackIndex = this.$route.params.trackIndex
     this.session = this.getSessionByIndex(this.sessionIndex)
   },
   methods: {
@@ -182,11 +180,11 @@ export default {
     }
   },
   watch: {
-    '$route.params.sessionIndex': function (x) {
-      this.sessionIndex = x
+    '$route.params.sessionIndex': function (param) {
+      this.sessionIndex = param
     },
-    '$route.params.trackIndex': function (x) {
-      this.trackIndex = x
+    '$route.params.trackIndex': function (param) {
+      this.trackIndex = param
     },
     sessionTracks () {
 
