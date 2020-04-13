@@ -2,11 +2,11 @@
   <main class="pics__list">
     <h1>pics list all sessions</h1>
     <div class="cards">
-      <div v-for="(item, idx) of sessionsWithPics" v-bind:key="idx" class="card">
+      <div v-for="(item, idx) of sessionsWithPics" v-bind:key="`pic-${item.index}-${idx}`" class="card">
         <router-link :to="{ name: 'SessionPicsShow', params: { sessionIndex: item.index } }">
           <img :src="randomItem(item.images).thumbPath" />
           <div class="card__content">
-            <h3>#{{item.counter}}</h3>
+            <h2><span class="darker__text session__symbol">#</span>{{item.counter}}</h2>
             {{item.images.length}} Pics
             <DateSquare :day="item.day" :month="item.month" :year="item.year" />
             <MusiciansBadges :session="item" />
@@ -85,11 +85,28 @@ export default {
   padding: 10px;
   margin: 10px;
   max-width: 30%;
+  max-height: 180px;
   a {
     display: contents;
   }
   .card__content {
     margin: 0 20px;
+    position: relative;
+    overflow-x: none;
+    overflow-y: auto;
+    h2 {
+      font-size: 28px;
+    }
+
+    time {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+    .stem__title {
+      margin: 0 3px 5px 0;
+      display: inline-block;
+    }
   }
 }
 
