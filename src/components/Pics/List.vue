@@ -8,6 +8,7 @@
           <div class="card__content">
             <h3>#{{item.counter}}</h3>
             {{item.images.length}} Pics
+            <DateSquare :day="item.day" :month="item.month" :year="item.year" />
             <MusiciansBadges :session="item" />
           </div>
         </router-link>
@@ -28,10 +29,12 @@
 // @ is an alias to /src
 import { mapGetters } from 'vuex'
 import MusiciansBadges from '@/components/MusiciansBadges.vue'
+import DateSquare from '@/components/Common/DateSquare.vue'
 export default {
   name: 'AllPics',
   components: {
-    MusiciansBadges
+    MusiciansBadges,
+    DateSquare
   },
   computed: {
     ...mapGetters([

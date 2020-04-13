@@ -7,7 +7,15 @@
         </button>
       </div>
       <div class="permaplayer__section-main">
-        {{ currentTrack.track.trackLetter }} {{ currentTrack.track.title }} -
+        {{ currentTrack.track.trackLetter }}
+        <router-link :to="{
+          name: 'TrackShow',
+          params: {
+            sessionIndex: currentTrack.track.session,
+            trackIndex: currentTrack.track.trackLetter
+          }
+        }">{{ currentTrack.track.title }}</router-link>
+        -
         <router-link :to="{
           name: 'SessionShow',
           params: {

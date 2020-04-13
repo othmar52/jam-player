@@ -55,6 +55,11 @@ export default {
         this.processed.push(item[1])
       }
     }
+  },
+  watch: {
+    track () {
+      this.prepareMusiciansArray()
+    }
   }
 }
 </script>

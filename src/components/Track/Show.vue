@@ -35,12 +35,12 @@
         </button>
         <h2 class="track__title">{{ track.title }}</h2>
         <div class="track__detail">
-          <span class="track__bpm">117</span>
+          <span class="track__bpm">{{ track.bpm }}</span>
           <span class="track__unit">bpm</span>
         </div>
         <div class="track__detail track__times" title="click to toggle between relative/absolute time">
-          <span class="track__current" id="time__elapsed">00:01</span> /
-          <span class="track__duration" id="time__total">15:01</span>
+          <span class="track__current" id="time__elapsed" v-if="isNowPlaying">{{ currentProgressSecond }} / </span>
+          <span class="track__duration" id="time__total">{{ formatTime(track.duration) }}</span>
         </div>
         <div class="track__detail track__detail-rating">
           <ul class="rating rating--4-5 rating--has-rated">
@@ -78,7 +78,11 @@
         </li-->
       </ul>
       <ul class="track__lines">
-        <li v-if="!isNowPlaying" class="overlayPlay" @click="loadTrack(trackIndex)">PLAY</li>
+        <li v-if="!isNowPlaying" class="overlayPlay" @click="loadTrack(trackIndex)">
+          <button class="track__play play" title="Play Track">
+            <SvgPlayPause usePath="play" />
+          </button>
+        </li>
         <PlayerStemLine
           v-for="(stem, idx) in track.stems"
           v-bind:key="idx"
@@ -117,6 +121,7 @@ export default {
       'getSessionByIndex',
       'getTrackByIndex',
       'getLoadedTrackInfo',
+      'getCurrentProgressSecond',
       'getIsPlaying'
     ]),
     sessionTracks () {
@@ -142,6 +147,9 @@ export default {
         return 'pause'
       }
       return 'play'
+    },
+    currentProgressSecond () {
+      return this.formatTime(this.getCurrentProgressSecond)
     }
   },
   created () {
@@ -186,15 +194,10 @@ export default {
     '$route.params.trackIndex': function (param) {
       this.trackIndex = param
     },
-    sessionTracks () {
-
-    },
-    isNowPlaying () {
-
-    },
-    playOrPauseInverted () {
-
-    }
+    sessionTracks () { },
+    isNowPlaying () { },
+    playOrPauseInverted () { },
+    currentProgressSecond () { }
   }
 }
 </script>
@@ -210,11 +213,16 @@ export default {
   z-index: 200;
   width: calc(100% - 700px);
   text-align: center;
-  padding: 100px 0;
-  opacity: 0.4;
+  padding: 20px 0;
+  opacity: 0.6;
+  transition: opacity 300ms ease-in-out;
+  button {
+    width: 300px;
+    height: 300px;
+  }
 }
 .overlayPlay:hover {
-  opacity: 0.8;
+  opacity: 0.9;
   cursor: pointer;
 }
 </style>

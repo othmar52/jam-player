@@ -23,7 +23,7 @@
               <span class="bright"><span class="bpm">{{ track.bpm }} BPM</span></span>
             </td>
             <td>
-              <span class="bright">{{ track.duration }}</span>
+              <span class="bright">{{ formatTime(track.duration) }} m</span>
             </td>
             <td>
               <MusiciansBadges :track="track" />
@@ -40,6 +40,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { helpersMixin } from '@/assets/js/helpersMixin.js'
 import MusiciansBadges from '@/components/MusiciansBadges.vue'
 import RatingStars from '@/components/RatingStars.vue'
 export default {
@@ -48,6 +49,9 @@ export default {
     MusiciansBadges,
     RatingStars
   },
+  mixins: [
+    helpersMixin
+  ],
   data () {
     return {
       session: ''

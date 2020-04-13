@@ -1,8 +1,12 @@
 <template>
   <main class="page__wrapper session session--detail" v-if="session">
     <router-link to="/pics" class="menu__link">All pics</router-link>
-    <h1>pics from session #xx</h1>
+    <div class="session__counter">
+      <h1>Pics of session <span class="darker__text session__symbol">#</span>{{ session.counter }}</h1>
+    </div>
+
     <MusiciansBadges :session="session" />
+    <DateSquare :day="session.day" :month="session.month" :year="session.year" />
     <div class="lightgallery" ref="lightgallery">
       <a :href="mediaItem.filePath" v-for="(mediaItem, picIdx) of session.images" v-bind:key="`${picIdx}`">
         <img :src="mediaItem.thumbPath" />
@@ -15,6 +19,7 @@
 import { mapGetters } from 'vuex'
 // import RatingStars from '@/components/RatingStars.vue'
 import MusiciansBadges from '@/components/MusiciansBadges.vue'
+import DateSquare from '@/components/Common/DateSquare.vue'
 
 import 'lightgallery.js'
 import 'lightgallery.js/dist/css/lightgallery.css'
@@ -25,7 +30,8 @@ import 'lg-fullscreen.js'
 export default {
   name: 'SessionPics',
   components: {
-    MusiciansBadges
+    MusiciansBadges,
+    DateSquare
   },
   data () {
     return {

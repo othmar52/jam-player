@@ -18,13 +18,7 @@
             v-bind:key="idx"
             @click="forwardToSession(idx)">
             <td class="session__date">
-              <time class="session__date date">
-                <span class="date__year">{{ session.year }}</span>
-                <span class="date__wrapper">
-                  <span class="date__month">{{ session.month }}</span>
-                  <span class="date__day">{{ session.day }}</span>
-                </span>
-              </time>
+              <DateSquare :day="session.day" :month="session.month" :year="session.year" />
             </td>
             <td class="text--centered session__counter">
               <h3>
@@ -71,13 +65,15 @@
 import { mapGetters } from 'vuex'
 import MusiciansBadges from '@/components/MusiciansBadges.vue'
 import RatingStars from '@/components/RatingStars.vue'
+import DateSquare from '@/components/Common/DateSquare.vue'
 import { helpersMixin } from '@/assets/js/helpersMixin.js'
 
 export default {
   name: 'SessionList',
   components: {
     MusiciansBadges,
-    RatingStars
+    RatingStars,
+    DateSquare
   },
   mixins: [
     helpersMixin
