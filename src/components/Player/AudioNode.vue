@@ -61,6 +61,9 @@ export default {
     },
     getCurrentTime () {
       return this.$refs.audio.currentTime
+    },
+    setVolume (volumeValue) {
+      this.$refs.audio.volume = volumeValue
     }
   },
   watch: {
@@ -76,6 +79,7 @@ export default {
   },
   mounted () {
     this[this.playOrPause]()
+    this.setVolume(this.getStemStateByIndex(this.stemIndex).volLevel)
     // TODO: check mixup with http & file protocol...
     // this.$refs.audio.setAttribute('crossorigin', 'anonymous');
     this.initMeter(this.$refs.audio)
