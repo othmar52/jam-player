@@ -70,7 +70,13 @@ export default {
       window.lightGallery(this.$refs.lightgallery)
     }, 0)
   },
+  beforeDestroy () {
+    this.$refs.lightgallery.destroy()
+  },
   methods: {
+  },
+  watch: {
+    session () { }
   }
 }
 </script>

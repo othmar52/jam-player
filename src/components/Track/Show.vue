@@ -35,7 +35,7 @@
         </button>
         <h2 class="track__title">{{ track.title }}</h2>
         <div class="track__detail">
-          <GalleryLink :session="session" v-if="session" />
+          <GalleryInline :session="session" v-if="session" />
           <span class="track__bpm">{{ track.bpm }}</span>
           <span class="track__unit">bpm</span>
         </div>
@@ -100,14 +100,14 @@
 import { mapGetters } from 'vuex'
 import PlayerStemLine from '@/components/Player/Stem/Line.vue'
 import SvgPlayPause from '@/components/Svg/PlayPause.vue'
-import GalleryLink from '@/components/GalleryLink.vue'
+import GalleryInline from '@/components/GalleryInline.vue'
 import { helpersMixin } from '@/assets/js/helpersMixin.js'
 export default {
   name: 'TrackShow',
   components: {
     SvgPlayPause,
     PlayerStemLine,
-    GalleryLink
+    GalleryInline
   },
   mixins: [
     helpersMixin
@@ -197,6 +197,7 @@ export default {
     '$route.params.trackIndex': function (param) {
       this.trackIndex = param
     },
+    session () { },
     sessionTracks () { },
     isNowPlaying () { },
     playOrPauseInverted () { },

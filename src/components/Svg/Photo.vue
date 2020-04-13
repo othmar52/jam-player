@@ -30,6 +30,9 @@ export default {
   },
   created () {
     this.digits = this.number.toString().length
+  },
+  watch: {
+    number () { }
   }
 }
 </script>

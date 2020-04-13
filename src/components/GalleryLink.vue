@@ -1,5 +1,6 @@
 <template>
   <router-link
+    v-if="session.images.length + session.videos.length > 0"
     :to="{ name: 'SessionPicsShow', params: { sessionIndex: session.index } }"
     :title="`Show pictures and videos of Session #${session.counter}`">
     <SvgPhoto :number="session.images.length + session.videos.length" />

@@ -79,8 +79,11 @@ export default {
           trackIndex: randomTrack.trackLetter
         }
       }
+      console.log(randomTrackRoute)
+      this.$router.push(randomTrackRoute)
+      return
       // load into permaplayer and force play
-      this.$store.dispatch(
+      this.$store.dispatch( // eslint-disable-line no-unreachable
         'loadPlayerTrack',
         randomTrackRoute.params
       )
