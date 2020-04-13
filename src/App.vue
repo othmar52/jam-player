@@ -19,6 +19,9 @@
           <li class="menu__item">
             <router-link to="/about" class="menu__link">About</router-link>
           </li>
+          <li class="menu__item">
+            <router-link to="/pics" class="menu__link">Pics</router-link>
+          </li>
           <li class="menu__item menu__item--logo">
             <router-link to="/" class="menu__link logo">
               <span class="logo__icon">

@@ -13,7 +13,8 @@
 export default {
   name: 'MusiciansBadges',
   props: {
-    track: Object
+    track: Object,
+    session: Object
   },
   data () {
     return {
@@ -26,20 +27,33 @@ export default {
   methods: {
     prepareMusiciansArray () {
       this.processed = []
+      if (typeof this.session !== 'undefined') {
+        this.fromSession()
+        return
+      }
       if (typeof this.track === 'undefined') {
         return
       }
       if (typeof this.track.stems === 'undefined') {
         return
       }
+      this.fromTrack()
+    },
+    fromTrack () {
       for (const stem of this.track.stems) {
         this.processed.push({ title: stem.title, color: stem.color })
       }
-    }
-  },
-  watch: {
-    track () {
-      this.prepareMusiciansArray()
+    },
+    fromSession () {
+      const helperUnique = {}
+      for (const track of Object.entries(this.session.tracks)) {
+        for (const stem of track[1].stems) {
+          helperUnique[`${stem.color}-${stem.title}`] = { title: stem.title, color: stem.color }
+        }
+      }
+      for (const item of Object.entries(helperUnique)) {
+        this.processed.push(item[1])
+      }
     }
   }
 }

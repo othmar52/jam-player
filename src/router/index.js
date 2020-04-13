@@ -6,6 +6,8 @@ import EmptyRouterView from '@/views/EmptyRouterView.vue'
 
 import SessionList from '@/components/Session/List.vue'
 import SessionShow from '@/components/Session/Show.vue'
+import AllPics from '@/components/Pics/List.vue'
+import SessionPics from '@/components/Pics/Show.vue'
 import TrackShow from '@/components/Track/Show.vue'
 
 Vue.use(VueRouter)
@@ -45,6 +47,28 @@ const routes = [
         component: TrackShow,
         meta: {
           title: 'track show'
+        }
+      }
+    ]
+  },
+  {
+    path: '/pics',
+    component: EmptyRouterView,
+    children: [
+      {
+        path: '',
+        name: 'AllPics',
+        component: AllPics,
+        meta: {
+          title: 'all pics'
+        }
+      },
+      {
+        path: ':sessionIndex',
+        name: 'SessionPicsShow',
+        component: SessionPics,
+        meta: {
+          title: 'session pics'
         }
       }
     ]

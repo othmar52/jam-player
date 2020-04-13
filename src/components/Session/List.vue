@@ -38,7 +38,7 @@
               <span class="darker__text">{{ toMinutes(session.duration) }} min</span>
             </td>
             <td>
-              <MusiciansBadges />
+               <MusiciansBadges :session="session" />
             </td>
             <td>
               <div v-if="session.images.length">
