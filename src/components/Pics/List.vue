@@ -1,5 +1,5 @@
 <template>
-  <main class="">
+  <main class="pics__list">
     <h1>pics list all sessions</h1>
     <div class="cards">
       <div v-for="(item, idx) of sessionsWithPics" v-bind:key="idx" class="card">
@@ -69,14 +69,22 @@ export default {
 </script>
 
 <style lang="scss">
+.pics__list {
+  height: 100%;
+}
 .cards {
   display: flex;
+  flex-wrap: wrap;
+  overflow-x: hidden;
+  overflow-y: auto;
+  height: 100%;
 }
 .card {
   display: flex;
   background-color: #1c2849;
   padding: 10px;
   margin: 10px;
+  max-width: 30%;
   a {
     display: contents;
   }

@@ -65,5 +65,7 @@ export default {
 </script>
 
 <style lang="scss">
-
+.stem__title {
+  white-space: nowrap;
+}
 </style>

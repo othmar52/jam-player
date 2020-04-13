@@ -15,6 +15,7 @@ module.exports = {
     config.plugin('copy').tap(([options]) => {
       options[0].ignore.push('data/**/*')
       options[0].ignore.push('tracklist.js')
+      options[0].ignore.push('tracklist-full.js')
       return [options]
     })
   }
