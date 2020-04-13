@@ -176,7 +176,37 @@ export default {
         return false
       }
       return true
+    },
+    resyncAudioNodes (self) {
+      if (!self.isPlaying) {
+        return
+      }
+      let syncTo = false
+      for (const playerId in self.currentTrack.stemStates) {
+        if (syncTo === false) {
+          // read reference time from very first audio track
+          syncTo = self.$refs[playerId][0].getCurrentTime()
+          continue
+        }
+        // calculate delta as a positive float
+        const delta = Math.abs(syncTo - self.$refs[playerId][0].getCurrentTime())
+        if (delta < 0.1) {
+          // no need for resyncing this audio node
+          continue
+        }
+        // console.log('resyncing stem', playerId, delta)
+        self.$refs[playerId][0].seekTo(syncTo)
+      }
     }
+  },
+  mounted () {
+    const self = this
+    setInterval(
+      function () {
+        self.resyncAudioNodes(self)
+      },
+      2000
+    )
   }
 }
 </script>

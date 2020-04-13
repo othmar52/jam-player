@@ -58,6 +58,9 @@ export default {
     },
     onEndedListener () {
       this.$store.commit('playerTrackEnded')
+    },
+    getCurrentTime () {
+      return this.$refs.audio.currentTime
     }
   },
   watch: {
