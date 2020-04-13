@@ -1,6 +1,7 @@
 <template>
   <main class="page__wrapper session session--detail">
     <router-link to="/sessions" class="menu__link">All sessions</router-link>
+    <GalleryLink :session="session" v-if="session" />
     <div class="tracklist__wrapper">
       <table class="track__list">
         <tbody>
@@ -43,11 +44,13 @@ import { mapGetters } from 'vuex'
 import { helpersMixin } from '@/assets/js/helpersMixin.js'
 import MusiciansBadges from '@/components/MusiciansBadges.vue'
 import RatingStars from '@/components/RatingStars.vue'
+import GalleryLink from '@/components/GalleryLink.vue'
 export default {
   name: 'SessionShow',
   components: {
     MusiciansBadges,
-    RatingStars
+    RatingStars,
+    GalleryLink
   },
   mixins: [
     helpersMixin

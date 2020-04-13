@@ -14,6 +14,9 @@
             <router-link to="/" class="menu__link">Dashboard</router-link>
           </li>
           <li class="menu__item">
+            <a href="#" class="menu__link" @click="loadRandomTrack">Random</a>
+          </li>
+          <li class="menu__item">
             <router-link to="/sessions" class="menu__link">Sessions</router-link>
           </li>
           <li class="menu__item">
@@ -55,10 +58,34 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'getStats'
+      'getStats',
+      'getAllSessions'
     ]),
     stats () {
       return this.getStats
+    }
+  },
+  methods: {
+    loadRandomTrack () {
+      // todo store a shuffeled list in vuex to avoid same route issue and better randomisation
+      const allSessionKeys = Object.keys(this.getAllSessions)
+      const randomSession = this.getAllSessions[allSessionKeys[allSessionKeys.length * Math.random() << 0]]
+      const allTrackKeys = Object.keys(randomSession.tracks)
+      const randomTrack = randomSession.tracks[allTrackKeys[allTrackKeys.length * Math.random() << 0]]
+      const randomTrackRoute = {
+        name: 'TrackShow',
+        params: {
+          sessionIndex: randomSession.index,
+          trackIndex: randomTrack.trackLetter
+        }
+      }
+      // load into permaplayer and force play
+      this.$store.dispatch(
+        'loadPlayerTrack',
+        randomTrackRoute.params
+      )
+      this.$store.dispatch('forcePermaPlay')
+      this.$router.push(randomTrackRoute)
     }
   },
   watch: {

@@ -179,7 +179,7 @@ input[type="range"]::-ms-fill-upper {
     color: #0d1332;
     transition: color 0.5s ease;
   }
-  
+
   h3 {
     color: mix($darkblue, #000, 60%);
   }
@@ -188,6 +188,11 @@ input[type="range"]::-ms-fill-upper {
   }
 }
 
+h1 {
+  a:hover {
+    text-decoration: underline;
+  }
+}
 .page__header {
   display: flex;
   align-items: flex-start;

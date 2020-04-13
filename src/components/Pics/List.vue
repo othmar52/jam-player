@@ -4,7 +4,7 @@
     <div class="cards">
       <div v-for="(item, idx) of sessionsWithPics" v-bind:key="`pic-${item.index}-${idx}`" class="card">
         <router-link :to="{ name: 'SessionPicsShow', params: { sessionIndex: item.index } }">
-          <img :src="randomItem(item.images).thumbPath" />
+          <img :src="randomItem(item.images.concat(item.videos)).thumbPath" />
           <div class="card__content">
             <h2><span class="darker__text session__symbol">#</span>{{item.counter}}</h2>
             {{item.images.length}} Pics
