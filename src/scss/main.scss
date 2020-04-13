@@ -1,3 +1,24 @@
+/* @see http://htmldog.com/references/css/properties/font-weight/ */
+/* TODO is there a better way to define each font weight ? */
+
+$fontConfig: (
+  'assets/fonts/Neo Sans Pro Light.ttf' ( 100, 200, 300, lighter ),
+  'assets/fonts/Neo Sans Pro.ttf' ( 400, normal ),
+  //'../fonts/Neo Sans Pro Medium.ttf' ( 500, 600, bolder ),
+  'assets/fonts/Neo Sans Pro Bold.ttf' ( 700, 800, 900, bold )
+);
+
+@each $fontSection in $fontConfig {
+  @each $fontWeight in nth($fontSection, 2) {
+    @font-face {
+      font-family: 'Neo Sans Pro';
+      src: url(nth($fontSection, 1))  format('truetype');
+      font-weight: $fontWeight;
+      font-style: normal;
+    }
+  }
+}
+
 html, body {
   padding: 0;
   margin: 0;
