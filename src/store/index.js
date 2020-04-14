@@ -115,6 +115,7 @@ export default new Vuex.Store({
       if (state.stats.totalTrackConfigs === state.stats.trackLoadAttempts) {
         // as soon as we have all tracks feed the randomizer
         this.dispatch('initRandomTracks')
+        this.dispatch('buildMusicianSearchIndex')
       }
     },
     playerTimeUpdate (state, second) {
@@ -293,6 +294,7 @@ export default new Vuex.Store({
       context.state.searchIndexWords.push(track.title)
       context.state.searchIndexResults.push(
         {
+          type: 'track',
           title: track.title,
           sessionCounter: track.session,
           trackLetter: track.trackLetter,
@@ -305,6 +307,33 @@ export default new Vuex.Store({
           }
         }
       )
+    },
+
+    buildMusicianSearchIndex: function (context) {
+      for (const sessionKey of Object.keys(context.state.stemSessions)) {
+        const stemTitles = []
+        for (const trackKey of Object.keys(context.state.stemSessions[sessionKey].tracks)) {
+          for (const stem of context.state.stemSessions[sessionKey].tracks[trackKey].stems) {
+            stemTitles.push(stem.title)
+          }
+        }
+        context.state.searchIndexWords.push(
+          `${sessionKey}${stemTitles.filter((v, i, a) => a.indexOf(v) === i)}`
+        )
+        context.state.searchIndexResults.push(
+          {
+            type: 'session',
+            title: `Session #${context.state.stemSessions[sessionKey].counter}`,
+            stemNames: stemTitles.filter((v, i, a) => a.indexOf(v) === i),
+            route: {
+              name: 'SessionShow',
+              params: {
+                sessionIndex: sessionKey
+              }
+            }
+          }
+        )
+      }
     },
 
     searchData ({ commit }, searchText) {
