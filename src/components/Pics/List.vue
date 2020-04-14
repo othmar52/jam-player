@@ -7,7 +7,7 @@
           <img :src="randomItem(item.images.concat(item.videos)).thumbPath" />
           <div class="card__content">
             <h2><span class="darker__text session__symbol">#</span>{{item.counter}}</h2>
-            {{item.images.length}} Pics
+            <span>{{ amountAsText(item) }}</span>
             <DateSquare :day="item.day" :month="item.month" :year="item.year" />
             <MusiciansBadges :session="item" />
           </div>
@@ -18,14 +18,7 @@
 </template>
 
 <script>
-/*
-  session nr
-  datum der sesseion
-  teilnehmer
-  anzahl der bilder
-  anzahl videos
-  ein random thumbnail
-*/
+
 // @ is an alias to /src
 import { mapGetters } from 'vuex'
 import MusiciansBadges from '@/components/MusiciansBadges.vue'
@@ -63,6 +56,24 @@ export default {
     },
     randomItem (inputArray) {
       return inputArray[Math.floor(Math.random() * inputArray.length)]
+    },
+    amountAsText (session) {
+      const textParts = []
+      if (session.images.length > 0) {
+        textParts.push(
+          session.images.length === 1
+            ? '1 Pic'
+            : `${session.images.length} Pics`
+        )
+      }
+      if (session.videos.length > 0) {
+        textParts.push(
+          session.videos.length === 1
+            ? '1 Video'
+            : `${session.videos.length} Videos`
+        )
+      }
+      return textParts.join(', ')
     }
   }
 }
@@ -89,6 +100,10 @@ export default {
   a {
     display: contents;
   }
+  img {
+    -webkit-filter: grayscale(80%);
+    filter: grayscale(80%);
+  }
   .card__content {
     margin: 0 20px;
     position: relative;
@@ -107,6 +122,12 @@ export default {
       margin: 0 3px 5px 0;
       display: inline-block;
     }
+  }
+}
+
+.card:hover {
+  img {
+    filter: none;
   }
 }
 

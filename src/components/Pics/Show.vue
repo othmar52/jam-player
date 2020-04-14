@@ -71,12 +71,9 @@ export default {
     }, 0)
   },
   beforeDestroy () {
-    this.$refs.lightgallery.destroy()
-  },
-  methods: {
-  },
-  watch: {
-    session () { }
+    if (typeof this.$refs.lightgallery.destroy !== 'undefined') {
+      this.$refs.lightgallery.destroy()
+    }
   }
 }
 </script>

@@ -197,7 +197,6 @@ export default {
     '$route.params.trackIndex': function (param) {
       this.trackIndex = param
     },
-    session () { },
     sessionTracks () { },
     isNowPlaying () { },
     playOrPauseInverted () { },
