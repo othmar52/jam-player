@@ -42,6 +42,8 @@ import 'lightgallery.js'
 import 'lg-fullscreen.js'
 import 'lg-zoom.js'
 import 'lg-video.js'
+import 'lg-thumbnail.js'
+import 'lg-autoplay.js'
 import 'lightgallery.js/dist/css/lightgallery.css'
 
 export default {
