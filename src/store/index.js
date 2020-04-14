@@ -17,6 +17,8 @@ export default new Vuex.Store({
       totalTracks: 0,
       totalDuration: 0,
       totalByteSize: 0,
+      totalPics: 0,
+      totalVideos: 0,
       loadedPercent: 0
     },
     currentTrack: {
@@ -71,6 +73,8 @@ export default new Vuex.Store({
       payload.trackCount = 0
       Vue.set(state.stemSessions, payload.index, payload)
       state.stats.totalSessions++
+      state.stats.totalPics += payload.images.length
+      state.stats.totalVideos += payload.videos.length
     },
     addTrack (state, payload) {
       Vue.set(state.stemSessions[payload.session].tracks, payload.trackLetter, payload)

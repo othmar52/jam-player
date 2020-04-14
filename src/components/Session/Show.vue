@@ -1,7 +1,6 @@
 <template>
   <main class="page__wrapper session session--detail">
-    <router-link to="/sessions" class="menu__link">All sessions</router-link>
-    <GalleryLink :session="session" v-if="session" />
+    <SessionHeader :session="session" v-if="session"/>
     <div class="tracklist__wrapper">
       <table class="track__list">
         <tbody>
@@ -44,20 +43,20 @@ import { mapGetters } from 'vuex'
 import { helpersMixin } from '@/assets/js/helpersMixin.js'
 import MusiciansBadges from '@/components/MusiciansBadges.vue'
 import RatingStars from '@/components/RatingStars.vue'
-import GalleryLink from '@/components/GalleryLink.vue'
+import SessionHeader from '@/components/Session/Header.vue'
 export default {
   name: 'SessionShow',
   components: {
     MusiciansBadges,
     RatingStars,
-    GalleryLink
+    SessionHeader
   },
   mixins: [
     helpersMixin
   ],
   data () {
     return {
-      session: ''
+      session: null
     }
   },
   computed: {
@@ -103,8 +102,9 @@ export default {
     }
   },
   watch: {
-    '$route.params.sessionIndex': function (x) {
-      this.sessionIndex = x
+    '$route.params.sessionIndex': function (sessionIndex) {
+      this.sessionIndex = sessionIndex
+      this.session = this.getSessionByIndex(this.sessionIndex)
     },
     sessionTracks () {
 

@@ -105,11 +105,13 @@ export default {
       return (this.playOrPause === 'play') ? 'pause' : 'play'
     },
     hiddenClass () {
-      return (this.currentRouteIsPermaPlayersAudio() === true)
+      const playerClass = (this.currentRouteIsPermaPlayersAudio() === true)
         ? 'hidden'
         : (this.currentTrack.track.stems)
           ? ''
           : 'hidden'
+      document.body.classList[(playerClass === 'hidden') ? 'remove' : 'add']('has__permaplayer')
+      return playerClass
     }
   },
   watch: {

@@ -1,5 +1,6 @@
 <template>
   <div class="dont__flex" v-if="track">
+    <SessionHeader :session="session" />
     <aside class="page__sidebar tracklist">
       <h3 class="tracklist__title">Tracklist Session <span class="session__symbol">#</span><span class="session__nr">{{ formatSessionNumber(sessionIndex) }}</span></h3>
       <ul class="tracklist__list">
@@ -35,7 +36,6 @@
         </button>
         <h2 class="track__title">{{ track.title }}</h2>
         <div class="track__detail">
-          <GalleryInline :session="session" v-if="session" />
           <span class="track__bpm">{{ track.bpm }}</span>
           <span class="track__unit">bpm</span>
         </div>
@@ -100,14 +100,14 @@
 import { mapGetters } from 'vuex'
 import PlayerStemLine from '@/components/Player/Stem/Line.vue'
 import SvgPlayPause from '@/components/Svg/PlayPause.vue'
-import GalleryInline from '@/components/GalleryInline.vue'
+import SessionHeader from '@/components/Session/Header.vue'
 import { helpersMixin } from '@/assets/js/helpersMixin.js'
 export default {
   name: 'TrackShow',
   components: {
     SvgPlayPause,
     PlayerStemLine,
-    GalleryInline
+    SessionHeader
   },
   mixins: [
     helpersMixin
@@ -191,8 +191,9 @@ export default {
     }
   },
   watch: {
-    '$route.params.sessionIndex': function (param) {
-      this.sessionIndex = param
+    '$route.params.sessionIndex': function (sessionIndex) {
+      this.sessionIndex = sessionIndex
+      this.session = this.getSessionByIndex(sessionIndex)
     },
     '$route.params.trackIndex': function (param) {
       this.trackIndex = param
@@ -228,4 +229,5 @@ export default {
   opacity: 0.9;
   cursor: pointer;
 }
+
 </style>

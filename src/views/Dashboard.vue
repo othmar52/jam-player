@@ -1,5 +1,8 @@
 <template>
-  <div class="dashboard">
+  <main class="page__wrapper dashboard">
+    <header class="page__header page__header--dashboard">
+      <h1 class="page__title"><span class="view__highlight">Dash</span>board</h1>
+    </header>
     <!--h1>DASHBOARD total tracks {{ stats.totalTracks }}</h1-->
     <div class="page__loader">
       <Loader :percent="percent" />
@@ -11,7 +14,7 @@
       <div class="msg__error"></div>
       <div class="msg__success"></div>
     </div>
-  </div>
+  </main>
 </template>
 
 <script>

@@ -1,5 +1,11 @@
 <template>
   <main class="page__wrapper session session--list">
+    <header class="page__header page__header--allsessions">
+      <h1 class="page__title"><span class="view__highlight">Se</span>ssions</h1>
+      <span>{{ getStats.totalSessions }} Sessions</span>
+      <span>{{ getStats.totalTracks }} Tracks</span>
+      <span>{{ toHours(getStats.totalDuration) }} h</span>
+    </header>
     <div class="sessionlist__wrapper">
       <table class="session__list">
         <tbody>
@@ -71,7 +77,8 @@ export default {
   ],
   computed: {
     ...mapGetters([
-      'getAllSessions'
+      'getAllSessions',
+      'getStats'
     ])
   },
   methods: {

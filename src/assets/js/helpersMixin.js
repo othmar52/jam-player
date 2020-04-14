@@ -8,6 +8,9 @@ export const helpersMixin = {
     toMinutes (seconds) {
       return parseInt(seconds / 60)
     },
+    toHours (seconds) {
+      return parseInt(seconds / 60 / 60)
+    },
     formatSessionNumber (inputString) {
       if (!inputString) {
         return ''

@@ -1,6 +1,10 @@
 <template>
   <main class="pics__list">
-    <h1>pics list all sessions</h1>
+    <header class="page__header page__header--allsessions">
+      <h1 class="page__title"><span class="view__highlight">Pi</span>cs &amp; <span class="view__highlight">Vi</span>deos</h1>
+      <span>{{ getStats.totalPics }} Pics</span>
+      <span>{{ getStats.totalVideos }} Videos</span>
+    </header>
     <div class="cards">
       <div v-for="(item, idx) of sessionsWithPics" v-bind:key="`pic-${item.index}-${idx}`" class="card">
         <router-link :to="{ name: 'SessionPicsShow', params: { sessionIndex: item.index } }">
@@ -31,7 +35,8 @@ export default {
   },
   computed: {
     ...mapGetters([
-      'getAllSessions'
+      'getAllSessions',
+      'getStats'
     ]),
     sessionsWithPics () {
       const sessWithMedia = []
@@ -95,14 +100,23 @@ export default {
   background-color: #1c2849;
   padding: 10px;
   margin: 10px;
-  max-width: 30%;
+  min-width: 420px;
+  max-width: 560px;
   max-height: 180px;
+  flex-shrink: 1;
+  flex-grow: 1;
   a {
-    display: contents;
+    display: flex;
   }
   img {
-    -webkit-filter: grayscale(80%);
+    width: 160px;
+    height: 160px;
+    display: inline-block;
+    background-image: url(data:image/svg+xml;base64,PHN2ZyAgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiAgd2lkdGg9IjQwIiAgaGVpZ2h0PSI0MCIgIGZpbGw9InJlZCI+ICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKC02LjMwMDAwMDAsMTkuNTAwMDAwKSBzY2FsZSgwLjAzMiwtMC4wMzIpIiBzdHJva2U9Im5vbmUiPiAgICAgIDxjaXJjbGUgY3g9IjgwMCIgY3k9IjAiIHI9IjYwMCIgc3Ryb2tlPSJub25lIiBmaWxsPSIjMDIwNzI0Ii8+ICAgICAgPHBhdGggZmlsbD0iIzYwZDRmZiIgY2xhc3M9InBhdGhfX2xvZ28iIHN0eWxlPSJzdHJva2U6IG5vbmU7IiBkPSJtODk4IDQwOCBsMzIgLTUgMCAtMTI1IGMwIC0xMTUgLTEgLTEyNSAtMTcgLTExOCAtMzUgMTQgLTE0MCAxNyAtMTc2IDYgLTUxIC0xNyAtMTIyIC04NCAtMTQxIC0xMzMgLTIyIC01NCAtMTMgLTEwOSAyNSAtMTUzIDQxIC00NiA3NiAtNTggMTU4IC01MyA4MiA0IDEzNSAzNSAxODYgMTA3IGwzMCA0MyA1IDE5OCA1IDE5OCA3NCAtNDkgYzc5IC01MiAxNzkgLTg5IDI0MSAtODkgNDYgMCA1OSAtMjQgMzYgLTY4IC0xOCAtMzQgLTc2IC04NyAtMTA1IC05NyAtMTggLTUgLTIxIC0xNCAtMjEgLTY5IDAgLTE2MyAtOTIgLTMwNiAtMjQzIC0zNzcgLTExOSAtNTUgLTI0MCAtNTggLTM3MCAtOSAtNzUgMjggLTE3MyAxMTggLTIxNSAxOTcgLTEyOCAyNDAgMTMgNTI5IDI5MSA1OTkgNDkgMTIgMTI1IDExIDIwNSAtM3oiID48L3BhdGg+ICAgIDwvZz48L3N2Zz4=);
+    background-repeat: no-repeat;
+    background-position: center;
     filter: grayscale(80%);
+    transition: filter 0.2s ease;
   }
   .card__content {
     margin: 0 20px;
