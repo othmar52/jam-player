@@ -6,6 +6,20 @@ import StemStates from '../assets/js/StemStates'
 
 Vue.use(Vuex)
 
+function * filter (array, condition, maxSize) { // eslint-disable-line no-unused-vars
+  if (!maxSize || maxSize > array.length) {
+    maxSize = array.length
+  }
+  let count = 0
+  let i = 0
+  while (count < maxSize && i < array.length) {
+    if (condition(array[i])) {
+      yield array[i]
+      count++
+    }
+    i++
+  }
+}
 export default new Vuex.Store({
   state: {
     treeStructure: [],
@@ -38,7 +52,15 @@ export default new Vuex.Store({
     settings: {
       soloMode: 'single' // use 'multi' for having multiple stems soloed simultaneously
     },
-    randomTracks: []
+    randomTracks: [],
+
+    // search related stuff
+    acData: [],
+    inputData: '',
+    focusIndex: '',
+    inputFocus: false,
+    searchIndexWords: [],
+    searchIndexResults: []
   },
   mutations: {
     // @see src/assets/js/DataLoader.js
@@ -84,6 +106,8 @@ export default new Vuex.Store({
       state.stats.totalDuration += payload.duration
       state.stats.totalByteSize += payload.byteSize
 
+      this.dispatch('addTrackToSearchIndex', payload)
+
       if (state.stats.totalTracks === 1) {
         // as soon as we have a track feed the randomizer with this single track
         this.dispatch('initRandomTracks')
@@ -119,7 +143,41 @@ export default new Vuex.Store({
       }
       Vue.set(state.permaPlayer.dbMeters[`s${payload.stemIndex}`], 'left', payload.maskSizes[0])
       Vue.set(state.permaPlayer.dbMeters[`s${payload.stemIndex}`], 'right', payload.maskSizes[1])
+    },
+
+    // search stuff begin
+    // thanks to https://codepen.io/solov/pen/ZEYRzmN
+    CHANGE_ACLIST (state, newList) {
+      state.acData = newList
+    },
+    RESET_ACLIST (state) {
+      state.acData = []
+    },
+    CHANGE_INPUT_DATA (state, text) {
+      state.inputData = text
+    },
+    SET_FOCUS (state, val) {
+      state.focusIndex = val
+    },
+    INCREMENT_DECREMENT_FOCUS (state, val) {
+      if (state.focusIndex === '') {
+        state.focusIndex = 0
+      } else {
+        state.focusIndex += val
+        if (state.focusIndex < 0) {
+          state.focusIndex = 0
+        } else if (state.focusIndex > 0 && state.focusIndex > state.acData.length - 1) {
+          state.focusIndex = state.acData.length - 1
+        }
+      }
+    },
+    RESET_FOCUS (state) {
+      state.focusIndex = ''
+    },
+    CHANGE_INPUT_FOCUS (state, val) {
+      state.inputFocus = val
     }
+    // search stuff end
   },
   plugins: [
     DataLoader,
@@ -228,7 +286,59 @@ export default new Vuex.Store({
         params: trackData
       })
       Vue.set(context.state, 'randomTracks', newRandomRoutes)
+    },
+
+    // search stuff begin
+    addTrackToSearchIndex: function (context, track) {
+      context.state.searchIndexWords.push(track.title)
+      context.state.searchIndexResults.push(
+        {
+          title: track.title,
+          sessionCounter: track.session,
+          trackLetter: track.trackLetter,
+          route: {
+            name: 'TrackShow',
+            params: {
+              sessionIndex: track.session,
+              trackIndex: track.trackLetter
+            }
+          }
+        }
+      )
+    },
+
+    searchData ({ commit }, searchText) {
+      // thanks to https://stackoverflow.com/questions/26468557/return-index-value-from-filter-method-javascript#answer-53398853
+      var searchResult = this.state.searchIndexWords.map(
+        (word, idx) => (word.toLowerCase().indexOf(searchText.toLowerCase()) > -1)
+          ? this.state.searchIndexResults[idx]
+          : undefined
+      ).filter(x => x).slice(0, 20)
+
+      commit('CHANGE_ACLIST', searchResult)
+      commit('INCREMENT_DECREMENT_FOCUS', 0)
+    },
+    optionPicked ({ commit }, pickedText) {
+      console.log('picked autocomplete option', pickedText)
+      commit('CHANGE_INPUT_DATA', pickedText)
+      commit('RESET_ACLIST')
+    },
+    resetData ({ commit }) {
+      commit('RESET_ACLIST')
+    },
+    changeInput ({ commit }, text) {
+      commit('CHANGE_INPUT_DATA', text)
+    },
+    focusChange ({ commit }, val) {
+      commit('INCREMENT_DECREMENT_FOCUS', val)
+    },
+    setFocus ({ commit }, val) {
+      commit('SET_FOCUS', val)
+    },
+    inputFocus ({ commit }, val) {
+      commit('CHANGE_INPUT_FOCUS', val)
     }
+    // search stuff end
   },
   getters: {
     getStats: state => state.stats,

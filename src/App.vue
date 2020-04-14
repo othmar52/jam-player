@@ -3,6 +3,8 @@
     <nav class="page__navigation menu">
       <ul class="menu__list">
         <li class="menu__item">
+          <SearchField :min-input="1" />
+        <li class="menu__item">
           <router-link to="/" class="menu__link">Dashboard</router-link>
         </li>
         <li class="menu__item">
@@ -43,12 +45,14 @@
 // @ is an alias to /src
 import { mapGetters } from 'vuex'
 import PermaPlayer from '@/components/Player/PermaPlayer.vue'
+import SearchField from '@/components/Search/Field.vue'
 import { faviconMixin } from '@/assets/js/faviconMixin.js'
 
 export default {
   name: 'Home',
   components: {
-    PermaPlayer
+    PermaPlayer,
+    SearchField
   },
   mixins: [
     faviconMixin
