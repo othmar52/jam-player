@@ -35,7 +35,8 @@ export default new Vuex.Store({
     },
     settings: {
       soloMode: 'single' // use 'multi' for having multiple stems soloed simultaneously
-    }
+    },
+    randomTracks: []
   },
   mutations: {
     // @see src/assets/js/DataLoader.js
@@ -78,6 +79,15 @@ export default new Vuex.Store({
       state.stats.totalTracks++
       state.stats.totalDuration += payload.duration
       state.stats.totalByteSize += payload.byteSize
+
+      if (state.stats.totalTracks === 1) {
+        // as soon as we have a track feed the randomizer with this single track
+        this.dispatch('initRandomTracks')
+      }
+      if (state.stats.totalTrackConfigs === state.stats.trackLoadAttempts) {
+        // as soon as we have all tracks feed the randomizer
+        this.dispatch('initRandomTracks')
+      }
     },
     playerTimeUpdate (state, second) {
       // console.log('mutation:playerTimeUpdate', second)
@@ -130,6 +140,7 @@ export default new Vuex.Store({
       this.dispatch('setInitialStemStates')
       this.dispatch('setInitialDbMeterValues')
       this.dispatch('forcePermaPlay')
+      this.dispatch('moveTrackToEnd', trackData)
     },
     setInitialStemStates: function (context) {
       const newStemStates = {}
@@ -168,6 +179,51 @@ export default new Vuex.Store({
     },
     forcePermaPlay: function (context) {
       context.state.permaPlayer.playing = true
+    },
+    initRandomTracks: function (context) {
+      const allTrackRoutes = []
+      for (const sessionKey of Object.keys(context.state.stemSessions)) {
+        for (const trackKey of Object.keys(context.state.stemSessions[sessionKey].tracks)) {
+          allTrackRoutes.push(
+            {
+              name: 'TrackShow',
+              params: {
+                sessionIndex: sessionKey,
+                trackIndex: trackKey
+              }
+            }
+          )
+        }
+      }
+      // shuffle
+      let counter = allTrackRoutes.length
+      while (counter > 0) {
+        const index = Math.floor(Math.random() * counter)
+        counter--
+        const temp = allTrackRoutes[counter]
+        allTrackRoutes[counter] = allTrackRoutes[index]
+        allTrackRoutes[index] = temp
+      }
+      context.state.randomTracks = allTrackRoutes
+    },
+    moveTrackToEnd: function (context, trackData) {
+      // move track to very end of randomizer
+      const newRandomRoutes = []
+      for (const route of context.state.randomTracks) {
+        if (route.params.sessionIndex !== trackData.sessionIndex) {
+          newRandomRoutes.push(route)
+          continue
+        }
+        if (route.params.trackIndex === trackData.trackIndex) {
+          continue
+        }
+        newRandomRoutes.push(route)
+      }
+      newRandomRoutes.push({
+        name: 'TrackShow',
+        params: trackData
+      })
+      Vue.set(context.state, 'randomTracks', newRandomRoutes)
     }
   },
   getters: {
@@ -183,6 +239,12 @@ export default new Vuex.Store({
     getDurationSecond: state => state.permaPlayer.duration,
     getRequestSeek: state => state.permaPlayer.requestSeek,
     getIsPlaying: state => state.permaPlayer.playing,
+    getNextRandomTrackRoute: state => {
+      if (state.randomTracks.length === 0) {
+        return { name: 'Dashboard' }
+      }
+      return state.randomTracks[0]
+    },
     getTrackByIndex: (state) => (sessionIndex, trackIndex) => {
       if (typeof state.stemSessions[sessionIndex] === 'undefined') {
         return undefined
