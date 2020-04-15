@@ -18,6 +18,15 @@ Object.size = function (obj) {
   return size
 }
 
+// pretty dbMeter/volumeMeter feature for audio tracks needs audioContext
+// but file:// protocol does not support audioContext for security reasons
+//   we can force it via URL to give it a try
+//   ATTENTION: file:// protocol requires flag "chromium --disable-web-security" for displaying dbMeter
+if (document.location.protocol !== 'file:' || document.location.hash.indexOf('forceMeter') > -1) {
+  window.audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+  document.location.hash = ''
+}
+
 // due to the requirement of supporting file:// protocol we can't
 // perform an ajax call. but we can load a script during runtime by creating a DOM node...
 const jsNode = document.createElement('script')

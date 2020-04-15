@@ -15,7 +15,8 @@ export const dbMeterSourceMixin = {
   methods: {
     initMeter (audioDomNode) {
       if (typeof window.audioCtx === 'undefined') {
-        window.audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+        // not possible without audioContext created in 'main.js'
+        return
       }
 
       audioDomNode.crossOrigin = 'anonymous'
