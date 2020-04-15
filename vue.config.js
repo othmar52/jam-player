@@ -1,6 +1,9 @@
 // vue.config.js
+const path = require('path')
 module.exports = {
   publicPath: './',
+  outputDir: path.resolve(__dirname, './dist'),
+  assetsDir: './data/stemplayer',
   // lintOnSave: false, // TODO remove as soon as tryout phase is finished
   css: {
     loaderOptions: {
