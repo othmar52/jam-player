@@ -41,6 +41,7 @@
           {{ currentProgressSecond }} / {{ durationSecond }}
           <!-- <span title="TODO: fullscreen toggle">[X]</span> -->
       </div>
+      <div class="sync__hint" v-if="resyncText" v-html="resyncText"></div>
     </div>
     <div v-else>
       no track in permaplayer. TODO: random button
@@ -68,7 +69,8 @@ export default {
   ],
   data () {
     return {
-      playOrPause: 'pause'
+      playOrPause: 'pause',
+      resyncText: ''
     }
   },
   computed: {
@@ -183,7 +185,9 @@ export default {
       if (!self.isPlaying) {
         return
       }
+      this.resyncText = ''
       let syncTo = false
+      const needSync = []
       for (const playerId in self.currentTrack.stemStates) {
         if (syncTo === false) {
           // read reference time from very first audio track
@@ -198,6 +202,10 @@ export default {
         }
         // console.log('resyncing stem', playerId, delta)
         self.$refs[playerId][0].seekTo(syncTo)
+        needSync.push(`<span class="dark__text">#</span>${parseInt(playerId.match(/\d+/g)) + 1}`)
+      }
+      if (needSync.length > 0) {
+        this.resyncText = `syncing audio ${needSync.join(', ')}`
       }
     }
   },
@@ -293,6 +301,19 @@ export default {
     .stem__title:last-child:after {
       content: '';
     }
+  }
+
+  .sync__hint {
+    position: absolute;
+    visibility: show;
+    display: block;
+    opacity: 1;
+    color: white;
+    top: -35px;
+    left: 7px;
+    background-color: $darkestblue;
+    color: $lightblue;
+    padding: 4px 10px;
   }
 
 }
