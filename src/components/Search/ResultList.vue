@@ -46,12 +46,13 @@ export default {
       if (typeof inputData === 'string') {
         return this.emphasizeTextMarkup(inputData, searchTerm)
       }
+      const multiResults = []
       for (const item of inputData) {
         if (item.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
-          return this.emphasizeTextMarkup(item, searchTerm)
+          multiResults.push(this.emphasizeTextMarkup(item, searchTerm))
         }
       }
-      return inputData.join(', ')
+      return [(multiResults.length > 0) ? multiResults : inputData].join(', ')
     },
     emphasizeTextMarkup (inputText, searchTerm) {
       if (inputText.trim() === '') {
