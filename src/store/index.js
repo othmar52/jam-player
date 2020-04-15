@@ -127,7 +127,12 @@ export default new Vuex.Store({
       state.permaPlayer.duration = second
     },
     playerTrackEnded (state) {
-      // TODO: handle playerTrackEnded event
+      // TODO: let the user decide to play next track or a random track...
+      // for now play a random track...
+      this.dispatch(
+        'loadPlayerTrack',
+        state.randomTracks[0].params
+      )
     },
     requestSeek (state, percent) {
       Vue.set(state.permaPlayer, 'requestSeek', percent * (state.permaPlayer.duration / 100))
