@@ -1,16 +1,18 @@
 <template>
   <main class="page__wrapper session session--detail" v-if="session">
-    <router-link to="/pics" class="menu__link">All pics</router-link>
-    <div class="session__counter">
-      <h1>Pics of
+    <header class="page__header page__header--pics">
+      <h1 class="page__title">
         <router-link :to="{ name: 'SessionShow', params: { sessionIndex: session.index } }">
-          session <span class="darker__text session__symbol">#</span>{{ session.counter }}
-        </router-link>
+          <span class="view__highlight">Se</span>ssion<span class="view__highlight">#{{ session.counter }}</span>
+        </router-link> Pics
       </h1>
-    </div>
+      <DateSquare :day="session.day" :month="session.month" :year="session.year" />
+      <span>{{ session.trackCount }} Tracks</span>
+      <span>{{ toMinutes(session.duration) }} min</span>
+    </header>
 
+    <router-link to="/pics" class="menu__link">All pics</router-link>
     <MusiciansBadges :session="session" />
-    <DateSquare :day="session.day" :month="session.month" :year="session.year" />
     <div class="lightgallery" ref="lightgallery">
       <a :href="mediaItem.filePath" v-for="(mediaItem, picIdx) of session.images" v-bind:key="`pic-${session.counter}-${picIdx}`">
         <img :src="mediaItem.thumbPath" />
@@ -34,6 +36,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import { helpersMixin } from '@/assets/js/helpersMixin.js'
 // import RatingStars from '@/components/RatingStars.vue'
 import MusiciansBadges from '@/components/MusiciansBadges.vue'
 import DateSquare from '@/components/Common/DateSquare.vue'
@@ -52,6 +55,9 @@ export default {
     MusiciansBadges,
     DateSquare
   },
+  mixins: [
+    helpersMixin
+  ],
   data () {
     return {
       session: ''

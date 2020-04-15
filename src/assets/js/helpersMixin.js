@@ -16,6 +16,9 @@ export const helpersMixin = {
         return ''
       }
       return inputString.replace('session', '').replace(/^0+/, '')
+    },
+    regExpEscape (inputString) {
+      return inputString.replace(/[-\\^$*+?.()|[\]{}]/g, '\\$&')
     }
   }
 }

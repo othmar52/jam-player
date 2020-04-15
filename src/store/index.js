@@ -296,7 +296,9 @@ export default new Vuex.Store({
         {
           type: 'track',
           title: track.title,
-          sessionCounter: track.session,
+          sessionCounter: context.state.stemSessions[track.session].counter,
+          month: context.state.stemSessions[track.session].month,
+          year: context.state.stemSessions[track.session].year,
           trackLetter: track.trackLetter,
           route: {
             name: 'TrackShow',
@@ -324,6 +326,9 @@ export default new Vuex.Store({
           {
             type: 'session',
             title: `Session #${context.state.stemSessions[sessionKey].counter}`,
+            sessionCounter: context.state.stemSessions[sessionKey].counter,
+            month: context.state.stemSessions[sessionKey].month,
+            year: context.state.stemSessions[sessionKey].year,
             stemNames: stemTitles.filter((v, i, a) => a.indexOf(v) === i),
             route: {
               name: 'SessionShow',
@@ -348,7 +353,6 @@ export default new Vuex.Store({
       commit('INCREMENT_DECREMENT_FOCUS', 0)
     },
     optionPicked ({ commit }, pickedText) {
-      console.log('picked autocomplete option', pickedText)
       commit('CHANGE_INPUT_DATA', pickedText)
       commit('RESET_ACLIST')
     },
@@ -393,7 +397,8 @@ export default new Vuex.Store({
         return undefined
       }
       return state.stemSessions[sessionIndex].tracks[trackIndex]
-    }
+    },
+    getSearchTerm: state => state.inputData
   },
   modules: {
   }
