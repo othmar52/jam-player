@@ -21,8 +21,8 @@ Object.size = function (obj) {
 // due to the requirement of supporting file:// protocol we can't
 // perform an ajax call. but we can load a script during runtime by creating a DOM node...
 const jsNode = document.createElement('script')
-jsNode.setAttribute('src', './tracklist.js')
-// jsNode.setAttribute('src', './tracklist-full.js')
+jsNode.setAttribute('src', './data/tracklist.js')
+// jsNode.setAttribute('src', './data/tracklist-full.js')
 document.head.appendChild(jsNode)
 
 // helper vars

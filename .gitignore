@@ -1,7 +1,5 @@
 
 public/data
-public/tracklist.js
-public/tracklist-full.js
 
 .DS_Store
 node_modules
