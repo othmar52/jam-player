@@ -89,9 +89,12 @@ const DataLoader = store => {
         store.commit('retrieveLoadAttempt')
         await Promise.all([loadScript(trackDataPath, attributes)])
           .then(function () {
+            const mediaPathPrefix = (window.hostLevel === 'sessionlist')
+              ? 'data/' + treeStructure[i].sessionDir + '/'
+              : ''
             store.commit('retrieveSessionProperties', {
               sessionIndex: sessIdx,
-              mediaPathPrefix: 'data/' + treeStructure[i].sessionDir + '/'
+              mediaPathPrefix: mediaPathPrefix
             })
             store.commit('retrieveTrackproperties', {
               sessionIndex: sessIdx,

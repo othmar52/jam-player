@@ -91,6 +91,11 @@ export default new Vuex.Store({
         // already added
         return
       }
+      if (window.hostLevel === 'track') {
+        // filesystem for pics and videos is missing (only available in parent directory)
+        payload.images = []
+        payload.videos = []
+      }
       payload.duration = 0
       payload.trackCount = 0
       Vue.set(state.stemSessions, payload.index, payload)
