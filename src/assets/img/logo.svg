@@ -1,0 +1,7 @@
+<svg width="166" height="166" xmlns="http://www.w3.org/2000/svg" >
+    <circle cx="82" cy="82" r="82" stroke="none" fill="#020724" />
+    <circle class="path__progress" cx="-82" cy="82" r="80" fill="none" stroke="#60d4ff" stroke-width="5" stroke-dasharray="502.655" stroke-dashoffset="502.655" />
+    <g transform="translate(0.000000,82.000000) scale(0.100000,-0.100000)" stroke="none">
+        <path class="path__logo" style="stroke:none;" d="m898 408 l32 -5 0 -125 c0 -115 -1 -125 -17 -118 -35 14 -140 17 -176 6 -51 -17 -122 -84 -141 -133 -22 -54 -13 -109 25 -153 41 -46 76 -58 158 -53 82 4 135 35 186 107 l30 43 5 198 5 198 74 -49 c79 -52 179 -89 241 -89 46 0 59 -24 36 -68 -18 -34 -76 -87 -105 -97 -18 -5 -21 -14 -21 -69 0 -163 -92 -306 -243 -377 -119 -55 -240 -58 -370 -9 -75 28 -173 118 -215 197 -128 240 13 529 291 599 49 12 125 11 205 -3z"/>
+    </g>
+</svg>
