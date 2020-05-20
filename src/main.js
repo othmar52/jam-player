@@ -18,6 +18,11 @@ Object.size = function (obj) {
   return size
 }
 
+// display hint how to activate the dbMeter stuff
+if (document.location.protocol === 'file:' && document.location.hash.indexOf('forceMeter') === -1) {
+  store.commit('setShowDbMeterHint')
+}
+
 // pretty dbMeter/volumeMeter feature for audio tracks needs audioContext
 // but file:// protocol does not support audioContext for security reasons
 //   we can force it via URL to give it a try

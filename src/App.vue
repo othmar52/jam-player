@@ -19,6 +19,9 @@
         <li class="menu__item">
           <router-link to="/pics" class="menu__link">Pics</router-link>
         </li>
+        <li class="menu__item" v-if="stats.showDbMeterHint">
+          <router-link to="/dbmeterhint" class="menu__link"><strong>README</strong></router-link>
+        </li>
         <li class="menu__item menu__item--logo">
           <router-link to="/" class="menu__link logo">
             <span class="logo__icon">

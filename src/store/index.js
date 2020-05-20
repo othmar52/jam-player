@@ -33,7 +33,8 @@ export default new Vuex.Store({
       totalByteSize: 0,
       totalPics: 0,
       totalVideos: 0,
-      loadedPercent: 0
+      loadedPercent: 0,
+      showDbMeterHint: false
     },
     currentTrack: {
       sessionIndex: '',
@@ -130,6 +131,9 @@ export default new Vuex.Store({
     },
     playerDurationUpdate (state, second) {
       state.permaPlayer.duration = second
+    },
+    setShowDbMeterHint (state) {
+      state.stats.showDbMeterHint = true
     },
     playerTrackEnded (state) {
       // TODO: let the user decide to play next track or a random track...
