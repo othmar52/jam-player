@@ -412,7 +412,36 @@ export default new Vuex.Store({
       }
       return state.stemSessions[sessionIndex].tracks[trackIndex]
     },
-    getSearchTerm: state => state.inputData
+    getSearchTerm: state => state.inputData,
+    getPreviousSessionByIndex: (state) => (sessionIndex) => {
+      // keep in mind that our session list is reversed! (newest session is the first item)
+      let foundCurrent = false
+      for (const sessionKey of Object.keys(state.stemSessions)) {
+        if (foundCurrent === true) {
+          return state.stemSessions[sessionKey]
+        }
+        if (sessionIndex === sessionKey) {
+          foundCurrent = true
+          continue
+        }
+      }
+      // obviosly there is no next item. so return the first item
+      return state.stemSessions[Object.keys(state.stemSessions)[0]]
+    },
+    getNextSessionByIndex: (state) => (sessionIndex) => {
+      let foundCurrent = false
+      for (const sessionKey of Object.keys(state.stemSessions).reverse()) {
+        if (foundCurrent === true) {
+          return state.stemSessions[sessionKey]
+        }
+        if (sessionIndex === sessionKey) {
+          foundCurrent = true
+          continue
+        }
+      }
+      // obviosly there is no next item. so return the first item
+      return state.stemSessions[Object.keys(state.stemSessions).reverse()[0]]
+    }
   },
   modules: {
   }

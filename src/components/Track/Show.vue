@@ -2,13 +2,17 @@
   <div class="dont__flex" v-if="track">
     <SessionHeader :session="session" />
     <aside class="page__sidebar tracklist">
-      <h3 class="tracklist__title">Tracklist Session <span class="session__symbol">#</span><span class="session__nr">{{ formatSessionNumber(sessionIndex) }}</span></h3>
+      <h3 class="tracklist__title">
+      <span @click="replaceTrackList(false)" title="previous session" class="session__nav">&lt;</span>
+      Tracklist Session <span class="session__symbol">#</span><span class="session__nr">{{ formatSessionNumber(trackListSessionIndex) }}</span>
+      <span @click="replaceTrackList(true)" title="next session" class="session__nav">&gt;</span>
+      </h3>
       <ul class="tracklist__list">
         <li
-          v-for="(sessionTrack, idx) in sessionTracks"
-          v-bind:key="`${sessionIndex}${idx}`"
+          v-for="(sessionTrack, idx) in trackListItems"
+          v-bind:key="`${trackListSessionIndex}${idx}`"
           class="tracklist__item tracklist__item--acti__TODO-SET_ACTIVE__ve">
-          <router-link :to="{ name: 'TrackShow', params: { sessionIndex: sessionIndex, trackIndex: idx } }" class="tracklist__link track">
+          <router-link :to="{ name: 'TrackShow', params: { sessionIndex: trackListSessionIndex, trackIndex: idx } }" class="tracklist__link track">
             <span class="track_letter track__letter-circled">{{ idx }}</span>
             <h4 class="track__title">{{ sessionTrack.title }}</h4>
             <ul class="track__list">
@@ -116,7 +120,9 @@ export default {
     return {
       session: '',
       trackIndex: '',
-      sessionIndex: ''
+      sessionIndex: '',
+      trackListSessionIndex: '',
+      trackListItems: []
     }
   },
   computed: {
@@ -125,14 +131,16 @@ export default {
       'getTrackByIndex',
       'getLoadedTrackInfo',
       'getCurrentProgressSecond',
-      'getIsPlaying'
+      'getIsPlaying',
+      'getPreviousSessionByIndex',
+      'getNextSessionByIndex'
     ]),
-    sessionTracks () {
-      if (typeof this.session.tracks === 'undefined') {
-        return []
-      }
-      return this.session.tracks
-    },
+    // trackListItems () {
+    //  if (typeof this.session.tracks === 'undefined') {
+    //    return []
+    //  }
+    //  return this.session.tracks
+    // },
     track () {
       return this.getTrackByIndex(this.sessionIndex, this.trackIndex)
     },
@@ -159,6 +167,8 @@ export default {
     this.sessionIndex = this.$route.params.sessionIndex
     this.trackIndex = this.$route.params.trackIndex
     this.session = this.getSessionByIndex(this.sessionIndex)
+    this.trackListSessionIndex = this.$route.params.sessionIndex
+    this.trackListItems = this.session.tracks
   },
   methods: {
     loadTrack (trackIndex) {
@@ -188,17 +198,25 @@ export default {
         return
       }
       this.$store.commit('requestUnmuteAll')
+    },
+    replaceTrackList (up = true) {
+      // const method = (up) ? 'getNextSessionByIndex' : 'getPreviousSessionByIndex'
+      const newSession = this[`get${(up) ? 'Next' : 'Previous'}SessionByIndex`](this.trackListSessionIndex)
+      this.trackListSessionIndex = newSession.index
+      this.trackListItems = newSession.tracks
     }
   },
   watch: {
     '$route.params.sessionIndex': function (sessionIndex) {
       this.sessionIndex = sessionIndex
       this.session = this.getSessionByIndex(sessionIndex)
+      this.trackListSessionIndex = sessionIndex
+      this.trackListItems = this.session.tracks
     },
     '$route.params.trackIndex': function (param) {
       this.trackIndex = param
     },
-    sessionTracks () { },
+    trackListItems () { },
     isNowPlaying () { },
     playOrPauseInverted () { },
     currentProgressSecond () { }
@@ -230,4 +248,19 @@ export default {
   cursor: pointer;
 }
 
+.tracklist__list {
+  .track__list {
+    li {
+      flex-grow: 1;
+    }
+  }
+}
+
+.session__nav {
+  opacity: 0.5;
+  &:hover {
+    opacity: 1;
+    cursor: pointer;
+  }
+}
 </style>
