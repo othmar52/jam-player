@@ -47,6 +47,9 @@ export default new Vuex.Store({
       positionSecond: 0,
       playing: false,
       requestSeek: false,
+      anyTrackSoloed: false,
+      anyTrackMuted: false,
+      anyTrackBoosted: false,
       stemStates: {},
       dbMeters: {}
     },
@@ -399,6 +402,8 @@ export default new Vuex.Store({
     getCurrentProgressSecond: state => state.permaPlayer.positionSecond,
     getDurationSecond: state => state.permaPlayer.duration,
     getRequestSeek: state => state.permaPlayer.requestSeek,
+    getAnyTrackSoloed: state => state.permaPlayer.anyTrackSoloed,
+    getAnyTrackMuted: state => state.permaPlayer.anyTrackMuted,
     getIsPlaying: state => state.permaPlayer.playing,
     getNextRandomTrackRoute: state => {
       if (state.randomTracks.length === 0) {

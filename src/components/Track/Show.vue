@@ -72,10 +72,10 @@
         </div>
       </header>
       <ul class="track__tools tool tool--all">
-        <li class="tool__item">
+        <li class="tool__item" v-if="getAnyTrackSoloed">
           <button class="tool__action tool__action--solo button" @click="unsoloAll">Unsolo All</button>
         </li>
-        <li class="tool__item">
+        <li class="tool__item" v-if="getAnyTrackMuted">
           <button class="tool__action tool__action--mute button" @click="unmuteAll">Unmute All</button>
         </li>
         <!--li class="tool__item">
@@ -133,7 +133,9 @@ export default {
       'getCurrentProgressSecond',
       'getIsPlaying',
       'getPreviousSessionByIndex',
-      'getNextSessionByIndex'
+      'getNextSessionByIndex',
+      'getAnyTrackSoloed',
+      'getAnyTrackMuted'
     ]),
     // trackListItems () {
     //  if (typeof this.session.tracks === 'undefined') {
@@ -200,7 +202,6 @@ export default {
       this.$store.commit('requestUnmuteAll')
     },
     replaceTrackList (up = true) {
-      // const method = (up) ? 'getNextSessionByIndex' : 'getPreviousSessionByIndex'
       const newSession = this[`get${(up) ? 'Next' : 'Previous'}SessionByIndex`](this.trackListSessionIndex)
       this.trackListSessionIndex = newSession.index
       this.trackListItems = newSession.tracks
@@ -263,4 +264,5 @@ export default {
     cursor: pointer;
   }
 }
+
 </style>

@@ -100,9 +100,9 @@ const StemStates = store => {
   }
 
   function setAllStates (newStemStates) {
-    let anyTrackBoosted = false
-    let anyTrackSoloed = false
-    let anyTrackMuted = false
+    Vue.set(store.state.permaPlayer, 'anyTrackBoosted', false)
+    Vue.set(store.state.permaPlayer, 'anyTrackSoloed', false)
+    Vue.set(store.state.permaPlayer, 'anyTrackMuted', false)
     for (const stemIndex in newStemStates) {
       // set defaults
       newStemStates[stemIndex].isMutedGui = false
@@ -112,18 +112,18 @@ const StemStates = store => {
       newStemStates[stemIndex].isMutedAudio = false
 
       if (newStemStates[stemIndex].isBoostedInternal === true) {
-        anyTrackBoosted = true
+        Vue.set(store.state.permaPlayer, 'anyTrackBoosted', true)
       }
       if (newStemStates[stemIndex].isSoloedInternal === true) {
-        anyTrackSoloed = true
+        Vue.set(store.state.permaPlayer, 'anyTrackSoloed', true)
       }
       if (newStemStates[stemIndex].isMutedInternal === true) {
-        anyTrackMuted = true
+        Vue.set(store.state.permaPlayer, 'anyTrackMuted', true)
       }
     }
 
     // highest priority: boost
-    if (anyTrackBoosted === true) {
+    if (store.state.permaPlayer.anyTrackBoosted === true) {
       for (const stemIndex in newStemStates) {
         if (newStemStates[stemIndex].isBoostedInternal === true) {
           newStemStates[stemIndex].volLevel = 1
@@ -137,7 +137,7 @@ const StemStates = store => {
     }
 
     // 2nd priority: solo
-    if (anyTrackSoloed === true) {
+    if (store.state.permaPlayer.anyTrackSoloed === true) {
       for (const stemIndex in newStemStates) {
         if (newStemStates[stemIndex].isSoloedInternal === true) {
           newStemStates[stemIndex].isSoloedGui = true
@@ -151,7 +151,7 @@ const StemStates = store => {
     }
 
     // 3rd priority: mute
-    if (anyTrackMuted === true) {
+    if (store.state.permaPlayer.anyTrackMuted === true) {
       for (const stemIndex in newStemStates) {
         if (newStemStates[stemIndex].isMutedInternal === true) {
           newStemStates[stemIndex].isMutedAudio = true
