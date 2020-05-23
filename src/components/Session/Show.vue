@@ -13,17 +13,17 @@
             <th>Track Rating</th>
           </tr>
           <tr v-for="(track, idx) in sessionTracks" v-bind:key="idx" @click="forwardToTrack(track.trackLetter)">
-            <td>
+            <td class="text--centered">
               <span class="track__letter track__letter-circled">{{ track.trackLetter }}</span>
             </td>
             <td class="text--bold">
               {{ track.title }}
             </td>
-            <td>
-              <span class="bright"><span class="bpm">{{ track.bpm }} BPM</span></span>
+            <td class="text--centered">
+              <span class="bright"><span class="bpm">{{ track.bpm }} <span class="unit">bpm</span></span></span>
             </td>
-            <td>
-              <span class="bright">{{ formatTime(track.duration) }} m</span>
+            <td class="text--centered">
+              <span class="bright">{{ formatTime(track.duration) }} <span class="unit">m</span></span>
             </td>
             <td>
               <MusiciansBadges :track="track" />
@@ -109,6 +109,11 @@ export default {
     sessionTracks () {
 
     }
+  },
+  metaInfo () {
+    return {
+      title: `Tracklist #${this.session.counter} (${this.session.month} ${this.session.year})`
+    }
   }
 }
 </script>
@@ -124,5 +129,8 @@ export default {
   font-size: 1.3em;
   text-align: center;
   line-height: 1.7em;
+}
+.unit {
+  color: $darktext;
 }
 </style>

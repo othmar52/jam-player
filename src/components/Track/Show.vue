@@ -221,6 +221,11 @@ export default {
     isNowPlaying () { },
     playOrPauseInverted () { },
     currentProgressSecond () { }
+  },
+  metaInfo () {
+    return {
+      title: `${this.track.title}, #${this.session.counter} (${this.session.month} ${this.session.year})`
+    }
   }
 }
 </script>

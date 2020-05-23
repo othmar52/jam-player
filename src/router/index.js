@@ -38,7 +38,7 @@ const routes = [
         name: 'SessionShow',
         component: SessionShow,
         meta: {
-          title: 'session traklist'
+          title: 'session tracklist'
         }
       },
       {
