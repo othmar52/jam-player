@@ -4,7 +4,7 @@
       <div class="dbmeter__mask" :style="`height: ${maskSizeLeft}%;`"></div>
     </div>
     <div class="dbmeter__channel">
-      <div class="dbmeter__mask" :style="`height: ${maskSizeLeft}%;`"></div>
+      <div class="dbmeter__mask" :style="`height: ${maskSizeRight}%;`"></div>
     </div>
   </div>
 </template>
