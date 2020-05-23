@@ -46,7 +46,7 @@
         </span>
         -->
         <div class="line__artist artist">
-          <span class="artist__name">{{ stem.title }}</span>
+          <span class="artist__name" :title="stem.rawDataPath">{{ stem.title }}</span>
         </div>
         <div class="tool__item tool__item--volume">
             <input
