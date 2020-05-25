@@ -45,7 +45,7 @@ export const dbMeterSourceMixin = {
       for (i = 0; i < this.channelCount; i++) {
         this.maskSizes[i] = this.maskSize(channelMaxes[i])
       }
-      this.commitToStore()
+      this.fireDbMeterEvent()
     },
 
     createMeterNode (sourceNode, audioCtx) {
@@ -73,18 +73,20 @@ export const dbMeterSourceMixin = {
       return returnVal
     },
 
-    commitToStore () {
+    fireDbMeterEvent () {
       if (this.maskSizes[0] === this.lastCommittedMaskSizes[0] &&
           this.maskSizes[1] === this.lastCommittedMaskSizes[1]) {
-        // do not commit in case the values hasn't changed
+        // do not dispatch in case the values hasn't changed
         return
       }
-      this.$store.commit(
-        'retrieveDbMeterValues',
-        {
-          stemIndex: this.stemIndex,
-          maskSizes: this.maskSizes
-        }
+      document.querySelector('#permaplayer').dispatchEvent(
+        new CustomEvent(
+          `dbmeter${this.stemIndex}`,
+          {
+            bubbles: true,
+            detail: this.maskSizes
+          }
+        )
       )
       this.lastCommittedMaskSizes = [
         this.maskSizes[0],

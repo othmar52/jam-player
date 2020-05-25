@@ -10,35 +10,33 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 export default {
   name: 'DbMeter',
   props: {
     stemIndex: Number,
     isNowPlaying: Boolean
   },
-  computed: {
-    ...mapGetters([
-      'getDbMeterValuesByIndex'
-    ]),
-    maskSizeLeft () {
-      return this.maskSizeFor('left')
-    },
-    maskSizeRight () {
-      return this.maskSizeFor('right')
+  data () {
+    return {
+      maskSizeLeft: 100,
+      maskSizeRight: 100
     }
   },
-  methods: {
-    maskSizeFor (channel) {
-      if (this.isNowPlaying === false) {
-        return 100
-      }
-      const maskSizes = this.$store.getters.getDbMeterValuesByIndex(this.stemIndex)
-      if (typeof maskSizes === 'undefined') {
-        return 100
-      }
-      return maskSizes[channel]
-    }
+  mounted () {
+    const that = this
+    document.querySelector('#permaplayer').addEventListener(
+      `dbmeter${this.stemIndex}`,
+      function (event) {
+        if (that.isNowPlaying === false) {
+          that.maskSizeLeft = 100
+          that.maskSizeRight = 100
+          return
+        }
+        that.maskSizeLeft = event.detail[0]
+        that.maskSizeRight = event.detail[1]
+      },
+      false
+    )
   }
 }
 </script>
