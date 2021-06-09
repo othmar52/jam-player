@@ -19,11 +19,11 @@
       </a>
       <span
         v-for="(mediaItem, vidIdx) of session.videos"
-        v-bind:key="`vid-${session.counter}-${vidIdx}`"
+        v-bind:key="`vid-${session.cleanCounter}-${vidIdx}`"
         data-sub-html="video caption1"
-        :data-html="`#vid-${session.counter}-${vidIdx}`">
+        :data-html="`#vid-${session.cleanCounter}-${vidIdx}`">
         <img :src="mediaItem.thumbPath" />
-        <div style="display:none;" :id="`vid-${session.counter}-${vidIdx}`">
+        <div style="display:none;" :id="`vid-${session.cleanCounter}-${vidIdx}`">
           <video class="lg-video-object lg-html5" controls preload="none">
             <source :src="mediaItem.filePath" type="video/mp4">
               Your browser does not support HTML5 video.
@@ -69,10 +69,17 @@ export default {
     ]),
     sessionIndex () {
       return this.$route.params.sessionIndex
+    },
+    cleanCounter () {
+      if (!this.session) {
+        return ''
+      }
+      return this.session.counter.replace(/[^a-z0-9]|\s+|\r?\n|\r/gmi, '-')
     }
   },
   mounted () {
     this.session = this.getSessionByIndex(this.sessionIndex)
+    console.log(this.session)
     // thanks to https://forum.vuejs.org/t/not-getting-refs-in-mounted/12490/5
     setTimeout(() => {
       window.lightGallery(this.$refs.lightgallery)
