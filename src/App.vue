@@ -91,7 +91,7 @@ export default {
 
 <style lang="scss">
 
-@import '~source-sans-pro/source-sans-pro.css';
+@import '~source-sans-pro/source-sans-3.css';
 @import "@/scss/main.scss";
 
 .page__header {
