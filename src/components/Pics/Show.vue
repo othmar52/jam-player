@@ -79,11 +79,27 @@ export default {
   },
   mounted () {
     this.session = this.getSessionByIndex(this.sessionIndex)
-    console.log(this.session)
-    // thanks to https://forum.vuejs.org/t/not-getting-refs-in-mounted/12490/5
-    setTimeout(() => {
-      window.lightGallery(this.$refs.lightgallery)
-    }, 0)
+    this.initNewGallery()
+  },
+  methods: {
+    initNewGallery () {
+      if (typeof this.$refs.lightgallery !== 'undefined') {
+        if (typeof this.$refs.lightgallery.destroy !== 'undefined') {
+          this.$refs.lightgallery.destroy()
+        }
+      }
+      const that = this
+      // thanks to https://forum.vuejs.org/t/not-getting-refs-in-mounted/12490/5
+      setTimeout(() => {
+        window.lightGallery(that.$refs.lightgallery)
+      }, 0)
+    }
+  },
+  watch: {
+    '$route.params.sessionIndex': function (sessionIndex) {
+      this.session = this.getSessionByIndex(sessionIndex)
+      this.initNewGallery()
+    }
   },
   beforeDestroy () {
     if (typeof this.$refs.lightgallery.destroy !== 'undefined') {
